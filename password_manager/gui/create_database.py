@@ -95,7 +95,7 @@ class CreateDatabaseDialog(QDialog):
         return self.password_input.text()
 
     def set_strength_label(self, label: str):
-        self.password_match_label.setText(f"Password strength: {label}")
+        self.strength_label.setText(f"Password strength: {label}")
 
     def get_database_path(self) -> str:
         return self.db_file_input.text()
