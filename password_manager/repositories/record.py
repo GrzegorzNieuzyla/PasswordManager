@@ -7,10 +7,13 @@ class RecordRepository:
     def __init__(self, db_manager: DatabaseManager):
         self.db_manager = db_manager
 
-    def add(self, record: Record):
+    def add(self, iv: bytes, json_data: bytes) -> int:
         with self.db_manager.create_session() as session:
+            record = Record(aes_iv=iv, json_record_data=json_data)
             session.add(record)
             session.commit()
+            session.refresh(record)
+            return record.id
 
     def update(self, id_: int, iv: bytes, json_data: bytes):
         with self.db_manager.create_session() as session:
