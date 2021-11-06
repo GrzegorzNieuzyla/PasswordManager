@@ -2,6 +2,8 @@ from typing import Callable
 
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSpacerItem, QFileDialog
 
+from password_manager.gui.password_strength_label import PasswordStrengthLabel
+
 
 class CreateDatabaseDialog(QDialog):
     def __init__(self):
@@ -9,7 +11,7 @@ class CreateDatabaseDialog(QDialog):
         self.db_file_label: QLabel = QLabel("Database file location:")
         self.password_label: QLabel = QLabel("Master password: ")
         self.confirm_label: QLabel = QLabel("Confirm password:")
-        self.strength_label: QLabel = QLabel("Password strength:")
+        self.strength_label: PasswordStrengthLabel = PasswordStrengthLabel()
         self.password_match_label: QLabel = QLabel()
         self.db_file_input: QLineEdit = QLineEdit()
         self.password_input: QLineEdit = QLineEdit()
@@ -94,8 +96,8 @@ class CreateDatabaseDialog(QDialog):
     def get_password(self) -> str:
         return self.password_input.text()
 
-    def set_strength_label(self, label: str):
-        self.strength_label.setText(f"Password strength: {label}")
+    def set_strength_label(self, strength: PasswordStrengthLabel.Strength):
+        self.strength_label.set_strength(strength)
 
     def get_database_path(self) -> str:
         return self.db_file_input.text()

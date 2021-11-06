@@ -5,6 +5,8 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QHBoxLayout, QDialogButtonBox, QCheckBox, QSlider, \
     QSpinBox
 
+from password_manager.gui.password_strength_label import PasswordStrengthLabel
+
 
 @dataclass
 class GenerationOptions:
@@ -19,7 +21,7 @@ class GenerationOptions:
 class GeneratePasswordDialog(QDialog):
     def __init__(self):
         super(GeneratePasswordDialog, self).__init__()
-        self.strength_label: QLabel = QLabel()
+        self.strength_label: PasswordStrengthLabel = PasswordStrengthLabel()
         self.length_label: QLabel = QLabel("Password length:")
         self.special_checkbox: QCheckBox = QCheckBox("Special characters")
         self.numbers_checkbox: QCheckBox = QCheckBox("Numbers")
@@ -92,5 +94,5 @@ class GeneratePasswordDialog(QDialog):
     def set_on_ok(self, callback: Callable[[], None]):
         self.buttons.accepted.connect(callback)  # type: ignore
 
-    def set_strength_label(self, label: str):
-        self.strength_label.setText(f"Password strength: {label}")
+    def set_strength_label(self, strength: PasswordStrengthLabel.Strength):
+        self.strength_label.set_strength(strength)
