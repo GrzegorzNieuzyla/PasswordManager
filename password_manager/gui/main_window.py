@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLa
 from password_manager.gui.menubar import MenuBar
 from password_manager.gui.password_strength_label import PasswordStrengthLabel
 from password_manager.models.record_data import RecordData
+from password_manager.password_strength_validator import Strength
 
 
 class MainWindow(QMainWindow):
@@ -144,7 +145,7 @@ class MainWindow(QMainWindow):
     def set_on_generate(self, callback: Callable[[], None]):
         self.generate_button.clicked.connect(callback)  # type: ignore
 
-    def set_strength_label(self, strength: PasswordStrengthLabel.Strength):
+    def set_strength_label(self, strength: Strength):
         self.strength_label.set_strength(strength)
 
     def set_on_search_changed(self, callback: Callable[[], str]):

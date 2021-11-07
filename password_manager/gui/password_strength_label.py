@@ -1,30 +1,22 @@
-from enum import Enum
-
 from PyQt6.QtWidgets import QLabel
+
+from password_manager.password_strength_validator import Strength
 
 
 class PasswordStrengthLabel(QLabel):
-    class Strength(Enum):
-        Empty = 0,
-        VeryLow = 1,
-        Low = 2,
-        Medium = 3
-        High = 4
-        VeryHigh = 5
-
     def __init__(self):
         super(PasswordStrengthLabel, self).__init__()
 
     def set_strength(self, strength: Strength):
-        if strength == self.Strength.VeryLow:
+        if strength == Strength.VeryLow:
             self._set_strength("Very low ", "DarkRed")
-        elif strength == self.Strength.Low:
+        elif strength == Strength.Low:
             self._set_strength("Low      ", "Crimson")
-        elif strength == self.Strength.Medium:
+        elif strength == Strength.Medium:
             self._set_strength("Medium   ", "Orange")
-        elif strength == self.Strength.High:
+        elif strength == Strength.High:
             self._set_strength("High     ", "GreenYellow")
-        elif strength == self.Strength.VeryHigh:
+        elif strength == Strength.VeryHigh:
             self._set_strength("Very high", "Green")
         else:
             self._set_strength("         ", "Green")
