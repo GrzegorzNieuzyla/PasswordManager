@@ -1,8 +1,9 @@
 from typing import Callable
 
 from PyQt6.QtWidgets import QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSizePolicy, \
-    QMainWindow, QPlainTextEdit, QListWidget, QGroupBox, QWidget
+    QMainWindow, QPlainTextEdit, QListWidget, QGroupBox, QWidget, QStatusBar
 
+from password_manager.gui.menubar import MenuBar
 from password_manager.gui.password_strength_label import PasswordStrengthLabel
 from password_manager.models.record_data import RecordData
 
@@ -36,7 +37,9 @@ class MainWindow(QMainWindow):
         self.copy_button: QPushButton = QPushButton("Copy")
         self.record_list: QListWidget = QListWidget()
         self.record_groupbox: QGroupBox = QGroupBox("Account data")
-
+        self.menubar: MenuBar = MenuBar()
+        self.setMenuBar(self.menubar)
+        self.setStatusBar(QStatusBar())
         self._init_layout()
         self._init_properties()
 
@@ -163,3 +166,6 @@ class MainWindow(QMainWindow):
 
     def set_apply_button_text(self, text: str):
         self.update_button.setText(text)
+
+    def get_menubar(self) -> MenuBar:
+        return self.menubar
