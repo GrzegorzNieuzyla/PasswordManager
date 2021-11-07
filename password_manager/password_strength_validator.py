@@ -45,13 +45,13 @@ class PasswordStrengthValidator:
 
         if entropy == 0:
             return Strength.Empty
-        elif entropy < 15:
+        elif entropy < 20:
             return Strength.VeryLow
-        elif entropy < 30:
+        elif entropy < 50:
             return Strength.Low
-        elif entropy < 60:
-            return Strength.Medium
         elif entropy < 100:
+            return Strength.Medium
+        elif entropy < 150:
             return Strength.High
         else:
             return Strength.VeryHigh

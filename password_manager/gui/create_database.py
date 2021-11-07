@@ -111,3 +111,6 @@ class CreateDatabaseDialog(QDialog):
 
     def set_on_password_change(self, callback: Callable[[str], None]):
         self.password_input.textEdited.connect(callback)  # type: ignore
+
+    def are_passwords_matching(self) -> bool:
+        return self.password_input.text() == self.confirm_input.text()
