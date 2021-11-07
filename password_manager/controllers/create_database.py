@@ -1,29 +1,32 @@
+import os
 from typing import Optional
 
-from password_manager.application_context import ApplicationContext
+import password_manager.application_context
 from password_manager.database_manager import DatabaseManager
 from password_manager.encryption.key_generator import KeyGenerator
 from password_manager.encryption.record_reader import EncryptedRecordReader
 from password_manager.encryption.record_writer import EncryptedRecordWriter
+from password_manager.file_helper import FileHelper
 from password_manager.gui.create_database import CreateDatabaseDialog
 from password_manager.gui.message_box import show_error
 from password_manager.password_strength_validator import PasswordStrengthValidator
-import os
-
 from password_manager.repositories.encryption_metadata import EncryptionMetadataRepository
 from password_manager.repositories.record import RecordRepository
 
 
 class CreateDatabaseController:
-    def __init__(self, application_context: ApplicationContext):
+    def __init__(self, application_context: "password_manager.application_context.ApplicationContext"):
         self.dialog = CreateDatabaseDialog()
         self.dialog.set_on_create(self._on_password_create_pressed)
         self.dialog.set_on_password_change(self._on_password_changed)
         self.dialog.set_on_open_existing_database(self._on_open_existing_pressed)
-        self.application_context: ApplicationContext = application_context
+        self.application_context: password_manager.application_context.ApplicationContext = application_context
 
     def run_dialog(self):
+        self.dialog.clear_fields()
         self.dialog.show()
+        self.dialog.setFocus()
+        self.dialog.browse_button.setFocus()
 
     def _on_password_create_pressed(self):
         if not self.dialog.are_passwords_matching():
@@ -72,4 +75,9 @@ class CreateDatabaseController:
         self.dialog.set_strength_label(PasswordStrengthValidator().validate_password(password))
 
     def _on_open_existing_pressed(self):
-        pass
+        filename = FileHelper.open_db_file()
+        if not filename:
+            return
+        self.application_context.initialize_database(filename)
+        self.dialog.hide()
+        self.application_context.login_controller.run_dialog()

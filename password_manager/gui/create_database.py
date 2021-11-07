@@ -1,7 +1,8 @@
 from typing import Callable
 
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSpacerItem, QFileDialog
+from PyQt6.QtWidgets import QDialog, QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSpacerItem
 
+from password_manager.file_helper import FileHelper
 from password_manager.gui.password_strength_label import PasswordStrengthLabel
 from password_manager.password_strength_validator import Strength
 
@@ -67,14 +68,12 @@ class CreateDatabaseDialog(QDialog):
         self.browse_button.clicked.connect(self._on_browse_clicked)
         self.password_input.textEdited.connect(self._on_password_changed)
         self.confirm_input.textEdited.connect(self._on_password_changed)
+        self.create_button.setEnabled(False)
 
     def _on_browse_clicked(self):
-        filename: str
-        filename, _ = QFileDialog.getSaveFileName(filter="Password manager database file (*.pmdb)",
-                                                  caption="Create new database file")
-        if not filename.endswith('.pmdb'):
-            filename += '.pmdb'
-        self.db_file_input.setText(filename)
+        filename: str = FileHelper.open_db_file_for_writing()
+        if filename:
+            self.db_file_input.setText(filename)
 
     def _on_show_clicked(self):
         if self.password_input.echoMode() == QLineEdit.EchoMode.Password:
@@ -93,6 +92,7 @@ class CreateDatabaseDialog(QDialog):
             self.password_match_label.setText('<span style="color:red;">Passwords do not match!</span>')
         else:
             self.password_match_label.clear()
+        self.create_button.setEnabled(self.are_passwords_matching() and len(self.password_input.text()) > 0)
 
     def get_password(self) -> str:
         return self.password_input.text()
@@ -114,3 +114,9 @@ class CreateDatabaseDialog(QDialog):
 
     def are_passwords_matching(self) -> bool:
         return self.password_input.text() == self.confirm_input.text()
+
+    def clear_fields(self):
+        self.password_input.clear()
+        self.confirm_input.clear()
+        self.set_strength_label(Strength.Empty)
+        self.create_button.setEnabled(False)

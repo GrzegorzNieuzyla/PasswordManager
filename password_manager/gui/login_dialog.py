@@ -1,7 +1,7 @@
 from typing import Callable
 
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSpacerItem, QSizePolicy
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QDialog, QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSpacerItem, QSizePolicy
 
 
 class LoginDialog(QDialog):
@@ -51,6 +51,11 @@ class LoginDialog(QDialog):
         self.setWindowTitle("Open database")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.password_input.setFocus()
+        self.password_input.textEdited.connect(self._enable_open_button)
+        self.open_button.setEnabled(False)
+
+    def _enable_open_button(self, password: str):
+        self.open_button.setEnabled(len(password) > 0)
 
     def get_password(self) -> str:
         return self.password_input.text()
@@ -66,8 +71,13 @@ class LoginDialog(QDialog):
         self.password_input.returnPressed.connect(callback)  # type: ignore
 
     def set_on_new_db(self, callback: Callable[[], None]):
-        self.new_db_button.textEdited.connect(callback)  # type: ignore
+        self.new_db_button.clicked.connect(callback)  # type: ignore
 
     def set_incorrect_password(self, incorrect: bool):
         self.wrong_password_label.setText(
             '<span style="color:red;">Password incorrect or corrupted database</span>' if incorrect else "")
+
+    def clear_fields(self):
+        self.password_input.clear()
+        self.wrong_password_label.clear()
+        self.open_button.setEnabled(False)

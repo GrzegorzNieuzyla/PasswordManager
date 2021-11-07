@@ -112,7 +112,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Password manager")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.record_list.setFocus()
-        self.set_strength_label(PasswordStrengthLabel.Strength.Low)
+        self.set_strength_label(Strength.Low)
 
     def _on_show_clicked(self):
         if self.password_input.echoMode() == QLineEdit.EchoMode.Password:
@@ -163,7 +163,7 @@ class MainWindow(QMainWindow):
         self.password_input.clear()
         self.description_input.clear()
         self.modification_label.clear()
-        self.set_strength_label(PasswordStrengthLabel.Strength.Empty)
+        self.set_strength_label(Strength.Empty)
 
     def set_apply_button_text(self, text: str):
         self.update_button.setText(text)
