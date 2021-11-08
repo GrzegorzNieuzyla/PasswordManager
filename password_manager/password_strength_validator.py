@@ -57,5 +57,5 @@ class PasswordStrengthValidator:
             return Strength.VeryHigh
 
     @staticmethod
-    def _calculate_entropy(pool_size: int, length: int):
+    def _calculate_entropy(pool_size: int, length: int) -> float:
         return length * math.log2(pool_size)

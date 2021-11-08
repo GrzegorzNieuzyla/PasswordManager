@@ -1,10 +1,13 @@
+import dataclasses
 import json
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from datetime import datetime
+from typing import Dict, List
 
 
 @dataclass
 class RecordData:
+    id_: int
     title: str
     website: str
     loginUrl: str
@@ -17,8 +20,14 @@ class RecordData:
         return datetime.fromtimestamp(self.modificationDate)
 
     def serialize(self) -> bytes:
-        return json.dumps(asdict(self)).encode()
+        raw_record = dataclasses.asdict(self)
+        del raw_record['id_']
+        return json.dumps(raw_record).encode()
 
     @staticmethod
-    def deserialize(data: bytes) -> 'RecordData':
-        return RecordData(**json.loads(data.decode()))
+    def deserialize(data: bytes, id_: int) -> 'RecordData':
+        return RecordData(**json.loads(data.decode()), id_=id_)
+
+    @staticmethod
+    def deserialize_all(records: Dict[int, bytes]) -> List['RecordData']:
+        return [RecordData.deserialize(data, key) for key, data in records.items()]

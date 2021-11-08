@@ -1,8 +1,10 @@
 from secrets import token_bytes
 from typing import Tuple
-from password_manager.repositories.record import RecordRepository
+
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
+
+from password_manager.repositories.record import RecordRepository
 
 
 class EncryptedRecordWriter:
@@ -14,7 +16,7 @@ class EncryptedRecordWriter:
         ciphertext, iv = self._encrypt(data)
         return self.repository.add(json_data=ciphertext, iv=iv)
 
-    def update(self, id_: int, data: bytes):
+    def update(self, id_: int, data: bytes) -> None:
         ciphertext, iv = self._encrypt(data)
         self.repository.update(id_, iv, ciphertext)
 

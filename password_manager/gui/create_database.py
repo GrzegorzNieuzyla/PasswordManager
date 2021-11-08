@@ -1,5 +1,6 @@
 from typing import Callable
 
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSpacerItem
 
 from password_manager.file_helper import FileHelper
@@ -8,7 +9,7 @@ from password_manager.password_strength_validator import Strength
 
 
 class CreateDatabaseDialog(QDialog):
-    def __init__(self):
+    def __init__(self) -> None:
         super(CreateDatabaseDialog, self).__init__()
         self.db_file_label: QLabel = QLabel("Database file location:")
         self.password_label: QLabel = QLabel("Master password: ")
@@ -25,7 +26,7 @@ class CreateDatabaseDialog(QDialog):
         self._init_layout()
         self._init_properties()
 
-    def _init_layout(self):
+    def _init_layout(self) -> None:
         main_layout = QVBoxLayout(self)
 
         file_box = QHBoxLayout()
@@ -59,23 +60,24 @@ class CreateDatabaseDialog(QDialog):
         button_box.addWidget(self.create_button)
         main_layout.addLayout(button_box)
 
-    def _init_properties(self):
+    def _init_properties(self) -> None:
         self.resize(600, 280)
         self.setWindowTitle("Create password database")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.confirm_input.setEchoMode(QLineEdit.EchoMode.Password)
-        self.show_button.clicked.connect(self._on_show_clicked)
-        self.browse_button.clicked.connect(self._on_browse_clicked)
-        self.password_input.textEdited.connect(self._on_password_changed)
-        self.confirm_input.textEdited.connect(self._on_password_changed)
+        self.show_button.clicked.connect(self._on_show_clicked)  # type: ignore
+        self.browse_button.clicked.connect(self._on_browse_clicked)  # type: ignore
+        self.password_input.textEdited.connect(self._on_password_changed)  # type: ignore
+        self.confirm_input.textEdited.connect(self._on_password_changed)  # type: ignore
         self.create_button.setEnabled(False)
+        self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
 
-    def _on_browse_clicked(self):
+    def _on_browse_clicked(self) -> None:
         filename: str = FileHelper.open_db_file_for_writing()
         if filename:
             self.db_file_input.setText(filename)
 
-    def _on_show_clicked(self):
+    def _on_show_clicked(self) -> None:
         if self.password_input.echoMode() == QLineEdit.EchoMode.Password:
             self.password_input.setEchoMode(QLineEdit.EchoMode.Normal)
             self.confirm_input.setEchoMode(QLineEdit.EchoMode.Normal)
@@ -85,7 +87,7 @@ class CreateDatabaseDialog(QDialog):
             self.confirm_input.setEchoMode(QLineEdit.EchoMode.Password)
             self.show_button.setText("Show")
 
-    def _on_password_changed(self):
+    def _on_password_changed(self) -> None:
         password: str = self.password_input.text()
         confirm: str = self.confirm_input.text()
         if (password or confirm) and password != confirm:
@@ -97,25 +99,25 @@ class CreateDatabaseDialog(QDialog):
     def get_password(self) -> str:
         return self.password_input.text()
 
-    def set_strength_label(self, strength: Strength):
+    def set_strength_label(self, strength: Strength) -> None:
         self.strength_label.set_strength(strength)
 
     def get_database_path(self) -> str:
         return self.db_file_input.text()
 
-    def set_on_create(self, callback: Callable[[], None]):
+    def set_on_create(self, callback: Callable[[], None]) -> None:
         self.create_button.clicked.connect(callback)  # type: ignore
 
-    def set_on_open_existing_database(self, callback: Callable[[], None]):
+    def set_on_open_existing_database(self, callback: Callable[[], None]) -> None:
         self.open_existing_button.clicked.connect(callback)  # type: ignore
 
-    def set_on_password_change(self, callback: Callable[[str], None]):
+    def set_on_password_change(self, callback: Callable[[str], None]) -> None:
         self.password_input.textEdited.connect(callback)  # type: ignore
 
     def are_passwords_matching(self) -> bool:
         return self.password_input.text() == self.confirm_input.text()
 
-    def clear_fields(self):
+    def clear_fields(self) -> None:
         self.password_input.clear()
         self.confirm_input.clear()
         self.set_strength_label(Strength.Empty)

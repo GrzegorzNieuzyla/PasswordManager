@@ -12,7 +12,7 @@ from password_manager.repositories.record import RecordRepository
 
 
 class ApplicationContext:
-    def __init__(self):
+    def __init__(self) -> None:
         self.database_manager: Optional[DatabaseManager] = None
         self.metadata_repository: Optional[EncryptionMetadataRepository] = None
         self.data_writer: Optional[EncryptedRecordWriter] = None
@@ -21,13 +21,13 @@ class ApplicationContext:
         self.login_controller: LoginController = LoginController(self)
         self.main_window_controller: MainWindowController = MainWindowController(self)
 
-    def initialize_data_access(self, key: bytes):
+    def initialize_data_access(self, key: bytes) -> None:
         if self.database_manager is None:
             raise ValueError("Database manager is not initialized")
         self.data_writer = EncryptedRecordWriter(RecordRepository(self.database_manager), key)
         self.data_reader = EncryptedRecordReader(RecordRepository(self.database_manager), key)
 
-    def initialize_database(self, db_path: str):
+    def initialize_database(self, db_path: str) -> None:
         self.database_manager = DatabaseManager(db_path)
         self.metadata_repository = EncryptionMetadataRepository(self.database_manager)
         Logger.info(f"Switched to database file {db_path}")

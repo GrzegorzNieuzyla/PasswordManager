@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QDialog, QVBoxLayout, QPushButton, QLabel, QLineEdit
 
 
 class LoginDialog(QDialog):
-    def __init__(self):
+    def __init__(self) -> None:
         super(LoginDialog, self).__init__()
         self.current_db_label: QLabel = QLabel()
         self.password_label: QLabel = QLabel("Master password:")
@@ -17,7 +17,7 @@ class LoginDialog(QDialog):
         self._init_layout()
         self._init_properties()
 
-    def _init_layout(self):
+    def _init_layout(self) -> None:
         main_layout = QVBoxLayout(self)
 
         top_label_box = QHBoxLayout()
@@ -46,38 +46,39 @@ class LoginDialog(QDialog):
         self.open_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         main_layout.addLayout(buttons_box)
 
-    def _init_properties(self):
+    def _init_properties(self) -> None:
         self.resize(500, 200)
         self.setWindowTitle("Open database")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.password_input.setFocus()
-        self.password_input.textEdited.connect(self._enable_open_button)
+        self.password_input.textEdited.connect(self._enable_open_button)  # type: ignore
         self.open_button.setEnabled(False)
+        self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
 
-    def _enable_open_button(self, password: str):
+    def _enable_open_button(self, password: str) -> None:
         self.open_button.setEnabled(len(password) > 0)
 
     def get_password(self) -> str:
         return self.password_input.text()
 
-    def set_database_label(self, label: str):
+    def set_database_label(self, label: str) -> None:
         self.current_db_label.setText(f"Current database file: {label}")
 
-    def set_on_change_db(self, callback: Callable[[], None]):
+    def set_on_change_db(self, callback: Callable[[], None]) -> None:
         self.change_db_button.clicked.connect(callback)  # type: ignore
 
-    def set_on_open(self, callback: Callable[[], None]):
+    def set_on_open(self, callback: Callable[[], None]) -> None:
         self.open_button.clicked.connect(callback)  # type: ignore
         self.password_input.returnPressed.connect(callback)  # type: ignore
 
-    def set_on_new_db(self, callback: Callable[[], None]):
+    def set_on_new_db(self, callback: Callable[[], None]) -> None:
         self.new_db_button.clicked.connect(callback)  # type: ignore
 
-    def set_incorrect_password(self, incorrect: bool):
+    def set_incorrect_password(self, incorrect: bool) -> None:
         self.wrong_password_label.setText(
             '<span style="color:red;">Password incorrect or corrupted database</span>' if incorrect else "")
 
-    def clear_fields(self):
+    def clear_fields(self) -> None:
         self.password_input.clear()
         self.wrong_password_label.clear()
         self.open_button.setEnabled(False)

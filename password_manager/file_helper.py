@@ -23,7 +23,7 @@ class FileHelper:
         return filename
 
     @staticmethod
-    def open_db_file_for_writing():
+    def open_db_file_for_writing() -> str:
         filename: str
         filename, _ = QFileDialog.getSaveFileName(filter="Password manager database file (*.pmdb)",
                                                   caption="Choose new database file")

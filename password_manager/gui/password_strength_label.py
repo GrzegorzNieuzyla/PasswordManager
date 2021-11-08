@@ -4,10 +4,10 @@ from password_manager.password_strength_validator import Strength
 
 
 class PasswordStrengthLabel(QLabel):
-    def __init__(self):
+    def __init__(self) -> None:
         super(PasswordStrengthLabel, self).__init__()
 
-    def set_strength(self, strength: Strength):
+    def set_strength(self, strength: Strength) -> None:
         if strength == Strength.VeryLow:
             self._set_strength("Very low ", "DarkRed")
         elif strength == Strength.Low:
@@ -21,5 +21,5 @@ class PasswordStrengthLabel(QLabel):
         else:
             self._set_strength("         ", "Green")
 
-    def _set_strength(self, text: str, color: str):
+    def _set_strength(self, text: str, color: str) -> None:
         self.setText(f'Password strength: <span style="color: {color};">{text}</span>')

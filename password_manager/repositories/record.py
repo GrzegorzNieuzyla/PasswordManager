@@ -1,6 +1,7 @@
+from typing import List
+
 from password_manager.database_manager import DatabaseManager
 from password_manager.models.record import Record
-from typing import List
 
 
 class RecordRepository:
@@ -15,7 +16,7 @@ class RecordRepository:
             session.refresh(record)
             return record.id
 
-    def update(self, id_: int, iv: bytes, json_data: bytes):
+    def update(self, id_: int, iv: bytes, json_data: bytes) -> None:
         with self.db_manager.create_session() as session:
             record = session.query(Record).get(id_)
             record.aes_iv = iv

@@ -1,12 +1,12 @@
-from password_manager.models.encryption_metadata import EncryptionMetadata
 from password_manager.database_manager import DatabaseManager
+from password_manager.models.encryption_metadata import EncryptionMetadata
 
 
 class EncryptionMetadataRepository:
     def __init__(self, db_manager: DatabaseManager):
         self.db_manager = db_manager
 
-    def add_or_update(self, salt: bytes, iterations: int, hmac: str, key_len: int):
+    def add_or_update(self, salt: bytes, iterations: int, hmac: str, key_len: int) -> None:
         with self.db_manager.create_session() as session:
             metadata: EncryptionMetadata = session.query(EncryptionMetadata).first()
             if metadata is None:
