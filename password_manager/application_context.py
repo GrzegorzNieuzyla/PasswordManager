@@ -2,6 +2,7 @@ from typing import Optional
 
 from password_manager.controllers.create_database import CreateDatabaseController
 from password_manager.controllers.login import LoginController
+from password_manager.controllers.main_window import MainWindowController
 from password_manager.database_manager import DatabaseManager
 from password_manager.encryption.record_reader import EncryptedRecordReader
 from password_manager.encryption.record_writer import EncryptedRecordWriter
@@ -18,6 +19,7 @@ class ApplicationContext:
         self.data_reader: Optional[EncryptedRecordReader] = None
         self.create_database_controller: CreateDatabaseController = CreateDatabaseController(self)
         self.login_controller: LoginController = LoginController(self)
+        self.main_window_controller: MainWindowController = MainWindowController(self)
 
     def initialize_data_access(self, key: bytes):
         if self.database_manager is None:

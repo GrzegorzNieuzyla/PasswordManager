@@ -2,16 +2,11 @@ import os
 from typing import Optional
 
 import password_manager.application_context
-from password_manager.database_manager import DatabaseManager
-from password_manager.encryption.key_generator import KeyGenerator
-from password_manager.encryption.record_reader import EncryptedRecordReader
-from password_manager.encryption.record_writer import EncryptedRecordWriter
+from password_manager.encryption.key_derivator import KeyDerivator
 from password_manager.file_helper import FileHelper
 from password_manager.gui.create_database import CreateDatabaseDialog
 from password_manager.gui.message_box import show_error
 from password_manager.password_strength_validator import PasswordStrengthValidator
-from password_manager.repositories.encryption_metadata import EncryptionMetadataRepository
-from password_manager.repositories.record import RecordRepository
 
 
 class CreateDatabaseController:
@@ -46,18 +41,12 @@ class CreateDatabaseController:
         if error:
             show_error(error)
             return
-        self._init_application_context(path, password)
 
-    def _init_application_context(self, db_path: str, password: str):
-        db_manager = DatabaseManager(db_path)
-        key, metadata = KeyGenerator(password).generate()
-        self.application_context.database_manager = db_manager
-        self.application_context.metadata_repository = EncryptionMetadataRepository(db_manager)
-        self.application_context.metadata_repository.add_or_update(metadata.salt, metadata.iterations, metadata.hmac,
-                                                                   metadata.key_len)
-        record_repository = RecordRepository(db_manager)
-        self.application_context.data_reader = EncryptedRecordReader(record_repository, key)
-        self.application_context.data_writer = EncryptedRecordWriter(record_repository, key)
+        self.application_context.initialize_database(path)
+        key = KeyDerivator(password, self.application_context.metadata_repository.get()).derive()
+        self.application_context.initialize_data_access(key)
+        self.dialog.hide()
+        self.application_context.main_window_controller.run_window()
 
     @staticmethod
     def _validate_path(path: str) -> Optional[str]:

@@ -170,3 +170,6 @@ class MainWindow(QMainWindow):
 
     def get_menubar(self) -> MenuBar:
         return self.menubar
+
+    def set_statusbar_text(self, text: str, seconds: int = 10):
+        self.statusBar().showMessage(text, seconds * 1000)

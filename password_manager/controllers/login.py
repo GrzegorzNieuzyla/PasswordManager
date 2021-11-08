@@ -6,8 +6,8 @@ from password_manager.gui.login_dialog import LoginDialog
 
 class LoginController:
     def __init__(self, application_context: "password_manager.application_context.ApplicationContext"):
-        self.dialog = LoginDialog()
-        self.application_context = application_context
+        self.dialog: LoginDialog = LoginDialog()
+        self.application_context: "password_manager.application_context.ApplicationContext" = application_context
         self.dialog.set_on_open(self._on_open_pressed)
         self.dialog.set_on_new_db(self._on_new_db_pressed)
         self.dialog.set_on_change_db(self._on_change_db_pressed)
@@ -25,6 +25,11 @@ class LoginController:
             return
         key = KeyDerivator(password, self.application_context.metadata_repository.get()).derive()
         self.application_context.initialize_data_access(key)
+        if not self.application_context.main_window_controller.try_load_data():
+            self.dialog.set_incorrect_password(True)
+            return
+        self.dialog.hide()
+        self.application_context.main_window_controller.run_window()
 
     def _on_new_db_pressed(self):
         self.dialog.hide()

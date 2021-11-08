@@ -81,3 +81,4 @@ class LoginDialog(QDialog):
         self.password_input.clear()
         self.wrong_password_label.clear()
         self.open_button.setEnabled(False)
+        self.set_incorrect_password(False)

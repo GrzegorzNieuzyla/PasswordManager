@@ -12,3 +12,7 @@ class Logger:
     @staticmethod
     def info(msg: str):
         Logger.logger.info(msg)
+
+    @staticmethod
+    def error(msg: str):
+        Logger.logger.error(msg)
