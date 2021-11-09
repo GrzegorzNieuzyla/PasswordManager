@@ -1,7 +1,7 @@
 import password_manager.application_context
 from password_manager.encryption.key_derivator import KeyDerivator
-from password_manager.file_helper import FileHelper
 from password_manager.gui.login_dialog import LoginDialog
+from password_manager.utils.file_helper import FileHelper
 
 
 class LoginController:

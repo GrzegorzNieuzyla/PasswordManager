@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QLabel
 
-from password_manager.password_strength_validator import Strength
+from password_manager.utils.password_strength_validator import Strength
 
 
 class PasswordStrengthLabel(QLabel):

@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QHBoxLayout
     QSpinBox
 
 from password_manager.gui.password_strength_label import PasswordStrengthLabel
-from password_manager.password_strength_validator import Strength
+from password_manager.utils.password_strength_validator import Strength
 
 
 @dataclass

@@ -8,7 +8,7 @@ from password_manager.gui.menubar import MenuBar
 from password_manager.gui.password_strength_label import PasswordStrengthLabel
 from password_manager.gui.record_list import RecordList
 from password_manager.models.record_data import RecordData
-from password_manager.password_strength_validator import Strength
+from password_manager.utils.password_strength_validator import Strength
 
 
 class MainWindow(QMainWindow):
@@ -34,7 +34,7 @@ class MainWindow(QMainWindow):
 
         self.add_new_button: QPushButton = QPushButton("Add new record")
         self.delete_button: QPushButton = QPushButton("Delete")
-        self.update_button: QPushButton = QPushButton("Update")
+        self.edit_save_button: QPushButton = QPushButton("Update")
         self.generate_button: QPushButton = QPushButton("Generate")
         self.show_button: QPushButton = QPushButton("Show")
         self.copy_button: QPushButton = QPushButton("Copy")
@@ -103,7 +103,7 @@ class MainWindow(QMainWindow):
         bottom_box = QHBoxLayout()
         bottom_box.addWidget(self.modification_label)
         bottom_box.addWidget(self.delete_button)
-        bottom_box.addWidget(self.update_button)
+        bottom_box.addWidget(self.edit_save_button)
         right_vbox.addLayout(bottom_box)
 
         self.record_groupbox.setLayout(right_vbox)
@@ -116,6 +116,7 @@ class MainWindow(QMainWindow):
         self.record_list.setFocus()
         self.set_strength_label(Strength.Low)
         self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+        self.show_button.clicked.connect(self._on_show_clicked)  # type: ignore
 
     def _on_show_clicked(self) -> None:
         if self.password_input.echoMode() == QLineEdit.EchoMode.Password:
@@ -139,8 +140,8 @@ class MainWindow(QMainWindow):
     def set_on_delete(self, callback: Callable[[], None]) -> None:
         self.delete_button.clicked.connect(callback)  # type: ignore
 
-    def set_on_update(self, callback: Callable[[], None]) -> None:
-        self.update_button.clicked.connect(callback)  # type: ignore
+    def set_on_save_edit(self, callback: Callable[[], None]) -> None:
+        self.edit_save_button.clicked.connect(callback)  # type: ignore
 
     def set_on_copy(self, callback: Callable[[], None]) -> None:
         self.copy_button.clicked.connect(callback)  # type: ignore
@@ -158,6 +159,15 @@ class MainWindow(QMainWindow):
         return RecordData(-1, self.title_input.text(), self.website_input.text(), self.login_url_input.text(),
                           self.login_input.text(), self.password_input.text(), self.description_input.toPlainText(), 0)
 
+    def set_data(self, record: RecordData) -> None:
+        self.title_input.setText(record.title)
+        self.website_input.setText(record.website)
+        self.login_url_input.setText(record.loginUrl)
+        self.login_input.setText(record.login)
+        self.password_input.setText(record.password)
+        self.description_input.setPlainText(record.description)
+        self.set_modification_time(record.get_days_from_modification())
+
     def clear_data(self) -> None:
         self.title_input.clear()
         self.website_input.clear()
@@ -169,10 +179,33 @@ class MainWindow(QMainWindow):
         self.set_strength_label(Strength.Empty)
 
     def set_apply_button_text(self, text: str) -> None:
-        self.update_button.setText(text)
+        self.edit_save_button.setText(text)
 
     def get_menubar(self) -> MenuBar:
         return self.menubar
 
     def set_statusbar_text(self, text: str, seconds: int = 10) -> None:
         self.statusBar().showMessage(text, seconds * 1000)
+
+    def _enable_inputs(self, enabled: bool) -> None:
+        self.search_input.setReadOnly(not enabled)
+        self.title_input.setReadOnly(not enabled)
+        self.login_input.setReadOnly(not enabled)
+        self.password_input.setReadOnly(not enabled)
+        self.website_input.setReadOnly(not enabled)
+        self.login_url_input.setReadOnly(not enabled)
+        self.description_input.setReadOnly(not enabled)
+
+    def set_update_state(self, new_record: bool) -> None:
+        self.add_new_button.setEnabled(False)
+        self.delete_button.setEnabled(not new_record)
+        self.edit_save_button.setEnabled(True)
+        self.edit_save_button.setText("Save")
+        self._enable_inputs(True)
+
+    def set_view_state(self) -> None:
+        self.add_new_button.setEnabled(True)
+        self.delete_button.setEnabled(True)
+        self.edit_save_button.setEnabled(True)
+        self.edit_save_button.setText("Edit")
+        self._enable_inputs(False)

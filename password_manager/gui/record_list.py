@@ -13,7 +13,7 @@ class RecordList(QListWidget):
         self.clicked_handler: Optional[Callable[[RecordData], None]] = None
         self.double_clicked_handler: Optional[Callable[[RecordData], None]] = None
         self.itemClicked.connect(self._on_click)  # type: ignore
-        self.itemDoubleClicked.connect(self._on_double_click())  # type: ignore
+        self.itemDoubleClicked.connect(self._on_double_click)  # type: ignore
 
     def add_record(self, record: RecordData) -> None:
         if record.id_ in self.list_items:
@@ -23,10 +23,13 @@ class RecordList(QListWidget):
         self.addItem(item)
         self.list_items[record.id_] = item
         self.sortItems(Qt.SortOrder.AscendingOrder)
+        self.setCurrentItem(item)
 
     def remove_record(self, record: RecordData) -> None:
         item = self.list_items[record.id_]
-        self.removeItemWidget(item)
+        self.takeItem(self.row(item))
+        del self.list_items[record.id_]
+        self.clearSelection()
 
     def set_on_clicked(self, callback: Callable[[RecordData], None]) -> None:
         self.clicked_handler = callback

@@ -3,9 +3,9 @@ from typing import Callable
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSpacerItem
 
-from password_manager.file_helper import FileHelper
 from password_manager.gui.password_strength_label import PasswordStrengthLabel
-from password_manager.password_strength_validator import Strength
+from password_manager.utils.file_helper import FileHelper
+from password_manager.utils.password_strength_validator import Strength
 
 
 class CreateDatabaseDialog(QDialog):

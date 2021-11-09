@@ -2,7 +2,7 @@ import dataclasses
 import json
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict
 
 
 @dataclass
@@ -19,6 +19,11 @@ class RecordData:
     def get_modification_date(self) -> datetime:
         return datetime.fromtimestamp(self.modificationDate)
 
+    def get_days_from_modification(self) -> int:
+        date = self.get_modification_date()
+        today = datetime.today()
+        return (today - date).days
+
     def serialize(self) -> bytes:
         raw_record = dataclasses.asdict(self)
         del raw_record['id_']
@@ -29,5 +34,5 @@ class RecordData:
         return RecordData(**json.loads(data.decode()), id_=id_)
 
     @staticmethod
-    def deserialize_all(records: Dict[int, bytes]) -> List['RecordData']:
-        return [RecordData.deserialize(data, key) for key, data in records.items()]
+    def deserialize_all(records: Dict[int, bytes]) -> Dict[int, 'RecordData']:
+        return {key: RecordData.deserialize(data, key) for key, data in records.items()}

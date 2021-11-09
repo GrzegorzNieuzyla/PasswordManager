@@ -4,7 +4,7 @@ import sys
 from PyQt6.QtWidgets import QApplication
 
 from password_manager.application_context import ApplicationContext
-from password_manager.logger import Logger
+from password_manager.utils.logger import Logger
 
 
 def run() -> None:

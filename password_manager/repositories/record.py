@@ -23,6 +23,12 @@ class RecordRepository:
             record.json_record_data = json_data
             session.commit()
 
+    def delete(self, id_: int) -> None:
+        with self.db_manager.create_session() as session:
+            record = session.query(Record).get(id_)
+            session.delete(record)
+            session.commit()
+
     def get_all(self) -> List[Record]:
         with self.db_manager.create_session() as session:
             return session.query(Record).all()

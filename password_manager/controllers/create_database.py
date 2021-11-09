@@ -3,10 +3,10 @@ from typing import Optional
 
 import password_manager.application_context
 from password_manager.encryption.key_derivator import KeyDerivator
-from password_manager.file_helper import FileHelper
 from password_manager.gui.create_database import CreateDatabaseDialog
 from password_manager.gui.message_box import show_error
-from password_manager.password_strength_validator import PasswordStrengthValidator
+from password_manager.utils.file_helper import FileHelper
+from password_manager.utils.password_strength_validator import PasswordStrengthValidator
 
 
 class CreateDatabaseController:
@@ -43,9 +43,7 @@ class CreateDatabaseController:
             return
 
         self.application_context.initialize_database(path)
-        if self.application_context.metadata_repository is None:
-            raise ValueError("Metadata repository is not initialized")
-        key = KeyDerivator(password, self.application_context.metadata_repository.get()).derive()
+        key = KeyDerivator(password, self.application_context.get_metadata_repository().get()).derive()
         self.application_context.initialize_data_access(key)
         self.dialog.hide()
         self.application_context.main_window_controller.run_window()

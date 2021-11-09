@@ -20,6 +20,9 @@ class EncryptedRecordWriter:
         ciphertext, iv = self._encrypt(data)
         self.repository.update(id_, iv, ciphertext)
 
+    def delete(self, id_: int) -> None:
+        self.repository.delete(id_)
+
     def _encrypt(self, data: bytes) -> Tuple[bytes, bytes]:
         iv: bytes = token_bytes(16)
         cipher = AES.new(self.key, AES.MODE_CBC, iv=iv)

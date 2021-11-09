@@ -7,3 +7,9 @@ def show_error(error: str) -> None:
     msg.setText(error)
     msg.setWindowTitle("Error")
     msg.exec()
+
+
+def confirm(msg: str) -> bool:
+    result = QMessageBox.question(None, "Confirm action", msg,
+                                  QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)  # type: ignore
+    return result == QMessageBox.StandardButton.Yes
