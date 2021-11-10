@@ -10,6 +10,6 @@ def show_error(error: str) -> None:
 
 
 def confirm(msg: str) -> bool:
-    result = QMessageBox.question(None, "Confirm action", msg,
-                                  QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)  # type: ignore
+    result = QMessageBox.question(None, "Confirm action", msg,  # type: ignore
+                                  QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
     return result == QMessageBox.StandardButton.Yes

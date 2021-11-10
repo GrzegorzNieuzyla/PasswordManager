@@ -58,4 +58,6 @@ class PasswordStrengthValidator:
 
     @staticmethod
     def _calculate_entropy(pool_size: int, length: int) -> float:
+        if pool_size == 0:
+            return 0.0
         return length * math.log2(pool_size)

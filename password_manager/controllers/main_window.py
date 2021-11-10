@@ -6,10 +6,12 @@ from typing import Dict, Optional
 from PyQt6.QtWidgets import QApplication
 
 import password_manager.application_context
+from password_manager.gui.generate_password import GeneratePasswordDialog
 from password_manager.gui.main_window import MainWindow
 from password_manager.gui.message_box import confirm
 from password_manager.models.record_data import RecordData
 from password_manager.utils.logger import Logger
+from password_manager.utils.password_generator import PasswordGenerator
 
 
 class MainWindowController:
@@ -20,6 +22,7 @@ class MainWindowController:
 
     def __init__(self, application_context: "password_manager.application_context.ApplicationContext") -> None:
         self.window: MainWindow = MainWindow()
+        self.password_dialog: GeneratePasswordDialog = GeneratePasswordDialog()
         self.application_context: "password_manager.application_context.ApplicationContext" = application_context
         self.records: Dict[int, RecordData] = {}
         self.current_record: Optional[RecordData] = None
@@ -36,6 +39,7 @@ class MainWindowController:
         self.window.get_menubar().set_on_change_password(self._on_change_password)
         self.window.record_list.set_on_clicked(self._on_item_clicked)
         self.window.record_list.set_on_double_clicked(self._on_item_double_clicked)
+        self.password_dialog.set_on_ok(self._on_password_generation)
         self.window.set_update_state(True)
 
     def run_window(self) -> None:
@@ -48,6 +52,7 @@ class MainWindowController:
             self.records = RecordData.deserialize_all(raw_records)
             for record in self.records.values():
                 self.window.record_list.add_record(record)
+            self.window.record_list.clearSelection()
             Logger.info(f"Loaded records: {self.records}")
             return True
         except (JSONDecodeError, ValueError) as e:
@@ -62,7 +67,13 @@ class MainWindowController:
             self.window.set_statusbar_text("No active password to copy")
 
     def _on_add_new_record(self) -> None:
-        pass
+        if self.state == self.State.New:
+            return
+        self.current_record = None
+        self.window.record_list.clearSelection()
+        self.state = self.State.New
+        self.window.clear_data()
+        self.window.set_update_state(True)
 
     def _on_delete(self) -> None:
         if self.state in (self.State.View, self.State.Update) and self.current_record is not None:
@@ -101,7 +112,8 @@ class MainWindowController:
             self.window.set_view_state()
 
     def _on_generate(self) -> None:
-        pass
+        self.password_dialog.clear()
+        self.password_dialog.show()
 
     def _on_new_db(self) -> None:
         pass
@@ -124,3 +136,11 @@ class MainWindowController:
     def _on_item_double_clicked(self, record: RecordData) -> None:
         QApplication.clipboard().setText(record.password)
         self.window.set_statusbar_text(f"Password for {record.title} copied to clipboard")
+
+    def _on_password_generation(self) -> None:
+        options = self.password_dialog.get_options()
+        password = PasswordGenerator.generate(options)
+        self.window.password_input.setText(password)
+        self._on_change_password()
+        self.password_dialog.clear()
+        self.password_dialog.hide()

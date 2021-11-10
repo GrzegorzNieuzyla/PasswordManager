@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Callable
 
 from PyQt6.QtCore import Qt
@@ -6,22 +5,13 @@ from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QHBoxLayout
     QSpinBox
 
 from password_manager.gui.password_strength_label import PasswordStrengthLabel
-from password_manager.utils.password_strength_validator import Strength
-
-
-@dataclass
-class GenerationOptions:
-    special: bool
-    numbers: bool
-    uppercase: bool
-    lowercase: bool
-    custom: str
-    length: int
+from password_manager.utils.password_generator import GenerationOptions
+from password_manager.utils.password_strength_validator import Strength, PasswordStrengthValidator
 
 
 class GeneratePasswordDialog(QDialog):
     def __init__(self) -> None:
-        super(GeneratePasswordDialog, self).__init__()
+        super(GeneratePasswordDialog, self).__init__(flags=Qt.WindowType.WindowStaysOnTopHint)
         self.strength_label: PasswordStrengthLabel = PasswordStrengthLabel()
         self.length_label: QLabel = QLabel("Password length:")
         self.special_checkbox: QCheckBox = QCheckBox("Special characters")
@@ -62,29 +52,39 @@ class GeneratePasswordDialog(QDialog):
     def _init_properties(self) -> None:
         self.resize(360, 300)
         self.setWindowTitle("Generate password")
-        self.buttons.rejected.connect(self.close)  # type: ignore
-        self.length_input.valueChanged.connect(self._on_spinbox_value_change)  # type: ignore
-        self.length_slider.valueChanged.connect(self._on_slider_value_change)  # type: ignore
-        self.custom_checkbox.stateChanged.connect(self._on_custom_checkbox_changed)  # type: ignore
         self.length_slider.setMinimum(5)
         self.length_slider.setMaximum(100)
         self.length_input.setMinimum(5)
         self.length_input.setMaximum(100)
-        self.special_checkbox.setChecked(True)
-        self.numbers_checkbox.setChecked(True)
-        self.uppercase_checkbox.setChecked(True)
-        self.lowercase_checkbox.setChecked(True)
-        self.custom_checkbox.setChecked(False)
-        self.custom_input.setEnabled(False)
+        self.clear()
+
+        self.buttons.rejected.connect(self.close)  # type: ignore
+        self.length_input.valueChanged.connect(self._on_spinbox_value_change)  # type: ignore
+        self.length_slider.valueChanged.connect(self._on_slider_value_change)  # type: ignore
+        self.custom_checkbox.stateChanged.connect(self._on_custom_checkbox_changed)  # type: ignore
+        self.numbers_checkbox.stateChanged.connect(self._on_update)  # type: ignore
+        self.special_checkbox.stateChanged.connect(self._on_update)  # type: ignore
+        self.lowercase_checkbox.stateChanged.connect(self._on_update)  # type: ignore
+        self.uppercase_checkbox.stateChanged.connect(self._on_update)  # type: ignore
+        self.custom_input.textEdited.connect(self._on_update)  # type: ignore
 
     def _on_custom_checkbox_changed(self) -> None:
         self.custom_input.setEnabled(self.custom_checkbox.isChecked())
+        self._on_update()
 
     def _on_slider_value_change(self, value: int) -> None:
         self.length_input.setValue(value)
+        self._on_update()
 
     def _on_spinbox_value_change(self, value: int) -> None:
         self.length_slider.setValue(value)
+        self._on_update()
+
+    def _on_update(self) -> None:
+        options = self.get_options()
+        self._set_strength_label(PasswordStrengthValidator().validate(options.special, options.numbers,
+                                                                      options.uppercase, options.lowercase,
+                                                                      options.length, options.custom))
 
     def get_options(self) -> GenerationOptions:
         return GenerationOptions(self.special_checkbox.isChecked(), self.numbers_checkbox.isChecked(),
@@ -95,5 +95,15 @@ class GeneratePasswordDialog(QDialog):
     def set_on_ok(self, callback: Callable[[], None]) -> None:
         self.buttons.accepted.connect(callback)  # type: ignore
 
-    def set_strength_label(self, strength: Strength) -> None:
+    def _set_strength_label(self, strength: Strength) -> None:
         self.strength_label.set_strength(strength)
+        self.buttons.button(QDialogButtonBox.StandardButton.Ok).setEnabled(strength != Strength.Empty)
+
+    def clear(self) -> None:
+        self.special_checkbox.setChecked(True)
+        self.numbers_checkbox.setChecked(True)
+        self.uppercase_checkbox.setChecked(True)
+        self.lowercase_checkbox.setChecked(True)
+        self.custom_checkbox.setChecked(False)
+        self.custom_input.setEnabled(False)
+        self._on_update()
