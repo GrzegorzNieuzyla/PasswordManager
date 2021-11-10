@@ -48,6 +48,7 @@ class MainWindowController:
 
     def try_load_data(self) -> bool:
         try:
+            self.window.clear_data()
             raw_records: Dict[int, bytes] = self.application_context.get_data_reader().get_all()
             self.records = RecordData.deserialize_all(raw_records)
             for record in self.records.values():
@@ -58,6 +59,9 @@ class MainWindowController:
         except (JSONDecodeError, ValueError) as e:
             Logger.error(f"Main window controller: {e}")
             return False
+
+    def load_new_db(self) -> None:
+        self.window.clear_data()
 
     def _on_copy(self) -> None:
         if self.current_record is not None:
@@ -116,7 +120,7 @@ class MainWindowController:
         self.password_dialog.show()
 
     def _on_new_db(self) -> None:
-        pass
+        self.application_context.create_database_controller.run_dialog()
 
     def _on_open_db(self) -> None:
         pass

@@ -177,6 +177,7 @@ class MainWindow(QMainWindow):
         self.description_input.clear()
         self.modification_label.clear()
         self.set_strength_label(Strength.Empty)
+        self.record_list.clear_data()
 
     def set_apply_button_text(self, text: str) -> None:
         self.edit_save_button.setText(text)

@@ -44,3 +44,7 @@ class RecordList(QListWidget):
     def _on_double_click(self, item: QListWidgetItem) -> None:
         if self.double_clicked_handler:
             self.double_clicked_handler(item.data(Qt.ItemDataRole.UserRole))
+
+    def clear_data(self) -> None:
+        self.clear()
+        self.list_items = {}

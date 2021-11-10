@@ -2,7 +2,7 @@ import os
 from typing import Optional
 
 import password_manager.application_context
-from password_manager.encryption.key_derivator import KeyDerivator
+from password_manager.encryption.key_generator import KeyGenerator
 from password_manager.gui.create_database import CreateDatabaseDialog
 from password_manager.gui.message_box import show_error
 from password_manager.utils.file_helper import FileHelper
@@ -43,9 +43,12 @@ class CreateDatabaseController:
             return
 
         self.application_context.initialize_database(path)
-        key = KeyDerivator(password, self.application_context.get_metadata_repository().get()).derive()
+        key, metadata = KeyGenerator(password).generate()
+        self.application_context.get_metadata_repository().add_or_update(metadata.salt, metadata.iterations,
+                                                                         metadata.hmac, metadata.key_len)
         self.application_context.initialize_data_access(key)
         self.dialog.hide()
+        self.application_context.main_window_controller.load_new_db()
         self.application_context.main_window_controller.run_window()
 
     @staticmethod
