@@ -152,8 +152,11 @@ class MainWindow(QMainWindow):
     def set_strength_label(self, strength: Strength) -> None:
         self.strength_label.set_strength(strength)
 
-    def set_on_search_changed(self, callback: Callable[[], str]) -> None:
+    def set_on_search_changed(self, callback: Callable[[str], None]) -> None:
         self.search_input.textEdited.connect(callback)  # type: ignore
+
+    def set_on_password_change(self, callback: Callable[[str], None]) -> None:
+        self.password_input.textEdited.connect(callback)  # type: ignore
 
     def get_data(self) -> RecordData:
         return RecordData(-1, self.title_input.text(), self.website_input.text(), self.login_url_input.text(),
@@ -168,7 +171,7 @@ class MainWindow(QMainWindow):
         self.description_input.setPlainText(record.description)
         self.set_modification_time(record.get_days_from_modification())
 
-    def clear_data(self) -> None:
+    def clear_data(self, clear_records: bool = True) -> None:
         self.title_input.clear()
         self.website_input.clear()
         self.login_url_input.clear()
@@ -177,7 +180,8 @@ class MainWindow(QMainWindow):
         self.description_input.clear()
         self.modification_label.clear()
         self.set_strength_label(Strength.Empty)
-        self.record_list.clear_data()
+        if clear_records:
+            self.record_list.clear_data()
 
     def set_apply_button_text(self, text: str) -> None:
         self.edit_save_button.setText(text)

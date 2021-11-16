@@ -11,7 +11,6 @@ class MenuBar(QMenuBar):
         self.options_menu: QMenu = self.addMenu("&Options")
         self.new_db_action: QAction = self.file_menu.addAction("&Add new database file")
         self.open_db_action: QAction = self.file_menu.addAction("Open &database file")
-        self.change_password_action: QAction = self.file_menu.addAction("&Change master password")
         self.quit_action: QAction = self.file_menu.addAction("&Quit")
         self.quit_action.triggered.connect(lambda: QApplication.quit())  # type: ignore
         self.preferences_action = self.options_menu.addAction("&Preferences")
@@ -23,9 +22,6 @@ class MenuBar(QMenuBar):
 
     def set_on_open_db(self, callback: Callable[[], None]) -> None:
         self.open_db_action.triggered.connect(callback)  # type: ignore
-
-    def set_on_change_password(self, callback: Callable[[], None]) -> None:
-        self.change_password_action.triggered.connect(callback)  # type: ignore
 
     def set_on_preferences(self, callback: Callable[[], None]) -> None:
         self.preferences_action.triggered.connect(callback)  # type: ignore

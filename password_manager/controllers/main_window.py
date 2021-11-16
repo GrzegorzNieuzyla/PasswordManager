@@ -36,9 +36,10 @@ class MainWindowController:
         self.window.get_menubar().set_on_new_db(self._on_new_db)
         self.window.get_menubar().set_on_open_db(self._on_open_db)
         self.window.get_menubar().set_on_preferences(self._on_preferences)
-        self.window.get_menubar().set_on_change_password(self._on_change_password)
         self.window.record_list.set_on_clicked(self._on_item_clicked)
         self.window.record_list.set_on_double_clicked(self._on_item_double_clicked)
+        self.window.set_on_search_changed(self._on_search_changed)
+        self.window.set_on_password_change(self._on_password_changed)
         self.password_dialog.set_on_ok(self._on_password_generation)
         self.window.set_update_state(True)
 
@@ -76,7 +77,7 @@ class MainWindowController:
         self.current_record = None
         self.window.record_list.clearSelection()
         self.state = self.State.New
-        self.window.clear_data()
+        self.window.clear_data(clear_records=False)
         self.window.set_update_state(True)
 
     def _on_delete(self) -> None:
@@ -128,7 +129,12 @@ class MainWindowController:
     def _on_preferences(self) -> None:
         pass
 
-    def _on_change_password(self) -> None:
+    def _on_password_changed(self, password: str) -> None:
+        # TODO: update bar
+        pass
+
+    def _on_search_changed(self, query: str) -> None:
+        # TODO: implement search
         pass
 
     def _on_item_clicked(self, record: RecordData) -> None:
@@ -145,6 +151,6 @@ class MainWindowController:
         options = self.password_dialog.get_options()
         password = PasswordGenerator.generate(options)
         self.window.password_input.setText(password)
-        self._on_change_password()
+        self._on_password_changed(password)
         self.password_dialog.clear()
         self.password_dialog.hide()
