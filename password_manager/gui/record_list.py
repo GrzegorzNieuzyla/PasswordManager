@@ -9,26 +9,30 @@ from password_manager.models.record_data import RecordData
 class RecordList(QListWidget):
     def __init__(self) -> None:
         super(RecordList, self).__init__()
-        self.list_items: Dict[int, QListWidgetItem] = {}
+        self.records: Dict[int, RecordData] = {}
+        self.visible_items: Dict[int, QListWidgetItem] = {}
         self.clicked_handler: Optional[Callable[[RecordData], None]] = None
         self.double_clicked_handler: Optional[Callable[[RecordData], None]] = None
         self.itemClicked.connect(self._on_click)  # type: ignore
         self.itemDoubleClicked.connect(self._on_double_click)  # type: ignore
 
     def add_record(self, record: RecordData) -> None:
-        if record.id_ in self.list_items:
+        if record.id_ in self.records:
             self.remove_record(record)
+        self.records[record.id_] = record
         item = QListWidgetItem(record.title)
         item.setData(Qt.ItemDataRole.UserRole, record)
         self.addItem(item)
-        self.list_items[record.id_] = item
+        self.visible_items[record.id_] = item
         self.sortItems(Qt.SortOrder.AscendingOrder)
         self.setCurrentItem(item)
 
     def remove_record(self, record: RecordData) -> None:
-        item = self.list_items[record.id_]
-        self.takeItem(self.row(item))
-        del self.list_items[record.id_]
+        del self.records[record.id_]
+        if record.id_ in self.visible_items:
+            item = self.visible_items[record.id_]
+            self.takeItem(self.row(item))
+            del self.visible_items[record.id_]
         self.clearSelection()
 
     def set_on_clicked(self, callback: Callable[[RecordData], None]) -> None:
@@ -47,4 +51,19 @@ class RecordList(QListWidget):
 
     def clear_data(self) -> None:
         self.clear()
-        self.list_items = {}
+        self.visible_items = {}
+        self.records = {}
+
+    def filter(self, query: str) -> None:
+        self.visible_items = {}
+        self.clear()
+        for record in self.records.values():
+            if query.lower() in record.title.lower():
+                item = QListWidgetItem(record.title)
+                item.setData(Qt.ItemDataRole.UserRole, record)
+                self.addItem(item)
+                self.visible_items[record.id_] = item
+        self.sortItems(Qt.SortOrder.AscendingOrder)
+
+    def clear_filter(self) -> None:
+        self.filter("")

@@ -12,6 +12,7 @@ from password_manager.gui.message_box import confirm
 from password_manager.models.record_data import RecordData
 from password_manager.utils.logger import Logger
 from password_manager.utils.password_generator import PasswordGenerator
+from password_manager.utils.password_strength_validator import PasswordStrengthValidator
 
 
 class MainWindowController:
@@ -101,6 +102,7 @@ class MainWindowController:
             self.current_record = new_record
             self.state = self.State.View
             self.window.set_view_state()
+            self.window.clear_filters()
         elif self.state == self.State.Update and self.current_record is not None:
             current_id = self.current_record.id_
             updated_record: RecordData = self.window.get_data()
@@ -124,18 +126,16 @@ class MainWindowController:
         self.application_context.create_database_controller.run_dialog()
 
     def _on_open_db(self) -> None:
-        pass
+        self.application_context.login_controller.run_dialog()
 
     def _on_preferences(self) -> None:
         pass
 
     def _on_password_changed(self, password: str) -> None:
-        # TODO: update bar
-        pass
+        self.window.set_strength_label(PasswordStrengthValidator().validate_password(password))
 
     def _on_search_changed(self, query: str) -> None:
-        # TODO: implement search
-        pass
+        self.window.record_list.filter(query)
 
     def _on_item_clicked(self, record: RecordData) -> None:
         self.current_record = record

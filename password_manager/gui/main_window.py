@@ -114,7 +114,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Password manager")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.record_list.setFocus()
-        self.set_strength_label(Strength.Low)
+        self.set_strength_label(Strength.Empty)
         self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
         self.show_button.clicked.connect(self._on_show_clicked)  # type: ignore
 
@@ -193,7 +193,6 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage(text, seconds * 1000)
 
     def _enable_inputs(self, enabled: bool) -> None:
-        self.search_input.setReadOnly(not enabled)
         self.title_input.setReadOnly(not enabled)
         self.login_input.setReadOnly(not enabled)
         self.password_input.setReadOnly(not enabled)
@@ -214,3 +213,7 @@ class MainWindow(QMainWindow):
         self.edit_save_button.setEnabled(True)
         self.edit_save_button.setText("Edit")
         self._enable_inputs(False)
+
+    def clear_filters(self) -> None:
+        self.record_list.clear_filter()
+        self.search_input.clear()
