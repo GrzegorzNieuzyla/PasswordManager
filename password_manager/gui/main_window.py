@@ -123,12 +123,12 @@ class MainWindow(QMainWindow):
         self.set_strength_label(Strength.Empty)
         self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
         self.show_button.clicked.connect(self._on_show_clicked)  # type: ignore
-        self.title_input.textEdited.connect(self._on_input_changed)  # type: ignore
-        self.login_input.textEdited.connect(self._on_input_changed)  # type: ignore
-        self.password_input.textEdited.connect(self._on_input_changed)  # type: ignore
-        self.login_url_input.textEdited.connect(self._on_input_changed)  # type: ignore
-        self.website_input.textEdited.connect(self._on_input_changed)  # type: ignore
-        self.description_input.textChanged.connect(self._on_input_changed)  # type: ignore
+        self.title_input.textEdited.connect(self.on_input_changed)  # type: ignore
+        self.login_input.textEdited.connect(self.on_input_changed)  # type: ignore
+        self.password_input.textEdited.connect(self.on_input_changed)  # type: ignore
+        self.login_url_input.textEdited.connect(self.on_input_changed)  # type: ignore
+        self.website_input.textEdited.connect(self.on_input_changed)  # type: ignore
+        self.description_input.textChanged.connect(self.on_input_changed)  # type: ignore
 
     def _on_show_clicked(self) -> None:
         """
@@ -183,7 +183,7 @@ class MainWindow(QMainWindow):
         return RecordData(-1, self.title_input.text(), self.website_input.text(), self.login_url_input.text(),
                           self.login_input.text(), self.password_input.text(), self.description_input.toPlainText(), 0)
 
-    def _on_input_changed(self) -> None:
+    def on_input_changed(self) -> None:
         """
         Enable/disable save button based on user input
         """
@@ -248,6 +248,7 @@ class MainWindow(QMainWindow):
         self.edit_save_button.setEnabled(True)
         self.edit_save_button.setText("Save")
         self._enable_inputs(True)
+        self.on_input_changed()
 
     def set_view_state(self) -> None:
         """

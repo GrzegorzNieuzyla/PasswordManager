@@ -102,6 +102,9 @@ class MainWindowController:
             self.application_context.get_data_writer().delete(self.current_record.id_)
             self.window.record_list.remove_record(self.current_record)
             del self.records[self.current_record.id_]
+            self.window.clear_data(False)
+            self.window.set_update_state(True)
+            self.window.record_list.setFocus()
 
     def _on_save_edit(self) -> None:
         if self.state == self.State.View:
@@ -177,3 +180,4 @@ class MainWindowController:
         self._on_password_changed(password)
         self.password_dialog.clear()
         self.password_dialog.hide()
+        self.window.on_input_changed()
