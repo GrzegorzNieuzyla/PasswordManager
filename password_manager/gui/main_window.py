@@ -117,6 +117,12 @@ class MainWindow(QMainWindow):
         self.set_strength_label(Strength.Empty)
         self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
         self.show_button.clicked.connect(self._on_show_clicked)  # type: ignore
+        self.title_input.textEdited.connect(self._on_input_changed)  # type: ignore
+        self.login_input.textEdited.connect(self._on_input_changed)  # type: ignore
+        self.password_input.textEdited.connect(self._on_input_changed)  # type: ignore
+        self.login_url_input.textEdited.connect(self._on_input_changed)  # type: ignore
+        self.website_input.textEdited.connect(self._on_input_changed)  # type: ignore
+        self.description_input.textChanged.connect(self._on_input_changed)  # type: ignore
 
     def _on_show_clicked(self) -> None:
         if self.password_input.echoMode() == QLineEdit.EchoMode.Password:
@@ -161,6 +167,9 @@ class MainWindow(QMainWindow):
     def get_data(self) -> RecordData:
         return RecordData(-1, self.title_input.text(), self.website_input.text(), self.login_url_input.text(),
                           self.login_input.text(), self.password_input.text(), self.description_input.toPlainText(), 0)
+
+    def _on_input_changed(self) -> None:
+        self.edit_save_button.setEnabled(self.can_save())
 
     def set_data(self, record: RecordData) -> None:
         self.title_input.setText(record.title)
@@ -217,3 +226,6 @@ class MainWindow(QMainWindow):
     def clear_filters(self) -> None:
         self.record_list.clear_filter()
         self.search_input.clear()
+
+    def can_save(self) -> bool:
+        return len(self.password_input.text()) > 0 and len(self.title_input.text()) > 0

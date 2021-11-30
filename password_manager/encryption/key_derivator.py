@@ -1,7 +1,7 @@
-from password_manager.models.encryption_metadata import EncryptionMetadata
-from secrets import token_bytes
-from Crypto.Protocol.KDF import PBKDF2
 from Crypto.Hash import SHA512
+from Crypto.Protocol.KDF import PBKDF2
+
+from password_manager.models.encryption_metadata import EncryptionMetadata
 
 
 class KeyDerivator:
