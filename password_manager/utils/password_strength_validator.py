@@ -16,6 +16,9 @@ class PasswordStrengthValidator:
     SpecialCharacters = '~!@#$%^&*()-=_+[{]}\\|;\':",.<>/?'
 
     def validate_password(self, password: str) -> Strength:
+        """
+        Check password and return the strength description
+        """
         special: bool = len(set(self.SpecialCharacters).union(set(password))) > 0
         numbers: bool = len(set(digits).union(set(password))) > 0
         uppercase: bool = len(set(ascii_uppercase).union(set(password))) > 0
@@ -24,6 +27,9 @@ class PasswordStrengthValidator:
 
     def validate(self, special: bool, numbers: bool, uppercase: bool, lowercase: bool, length: int,
                  custom: str = "") -> Strength:
+        """
+        Check generation options and return the strength description
+        """
         characters = set()
         if special:
             for char in self.SpecialCharacters:

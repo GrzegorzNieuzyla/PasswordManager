@@ -47,6 +47,9 @@ class MainWindow(QMainWindow):
         self._init_properties()
 
     def _init_layout(self) -> None:
+        """
+        Create controls and place them in layout on window
+        """
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         main_layout = QHBoxLayout(central_widget)
@@ -110,6 +113,9 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(self.record_groupbox)
 
     def _init_properties(self) -> None:
+        """
+        Set options and setup callbacks
+        """
         self.resize(800, 700)
         self.setWindowTitle("Password manager")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
@@ -125,6 +131,9 @@ class MainWindow(QMainWindow):
         self.description_input.textChanged.connect(self._on_input_changed)  # type: ignore
 
     def _on_show_clicked(self) -> None:
+        """
+        Toggle password visibility
+        """
         if self.password_input.echoMode() == QLineEdit.EchoMode.Password:
             self.password_input.setEchoMode(QLineEdit.EchoMode.Normal)
             self.show_button.setText("Hide")
@@ -133,6 +142,9 @@ class MainWindow(QMainWindow):
             self.show_button.setText("Show")
 
     def set_modification_time(self, days: int) -> None:
+        """
+        Set label indicating modification time
+        """
         if days > 1:
             self.modification_label.setText(f'Password set {days} ago')
         elif days == 1:
@@ -165,13 +177,22 @@ class MainWindow(QMainWindow):
         self.password_input.textEdited.connect(callback)  # type: ignore
 
     def get_data(self) -> RecordData:
+        """
+        Create record data based on user input
+        """
         return RecordData(-1, self.title_input.text(), self.website_input.text(), self.login_url_input.text(),
                           self.login_input.text(), self.password_input.text(), self.description_input.toPlainText(), 0)
 
     def _on_input_changed(self) -> None:
+        """
+        Enable/disable save button based on user input
+        """
         self.edit_save_button.setEnabled(self.can_save())
 
     def set_data(self, record: RecordData) -> None:
+        """
+        Populate input controls based on existing record
+        """
         self.title_input.setText(record.title)
         self.website_input.setText(record.website)
         self.login_url_input.setText(record.loginUrl)
@@ -181,6 +202,9 @@ class MainWindow(QMainWindow):
         self.set_modification_time(record.get_days_from_modification())
 
     def clear_data(self, clear_records: bool = True) -> None:
+        """
+        Empty input controls and (optionally) record list
+        """
         self.title_input.clear()
         self.website_input.clear()
         self.login_url_input.clear()
@@ -199,9 +223,15 @@ class MainWindow(QMainWindow):
         return self.menubar
 
     def set_statusbar_text(self, text: str, seconds: int = 10) -> None:
+        """
+        Show message in status bar
+        """
         self.statusBar().showMessage(text, seconds * 1000)
 
     def _enable_inputs(self, enabled: bool) -> None:
+        """
+        Disable or enable buttons (toggle readonly status)
+        """
         self.title_input.setReadOnly(not enabled)
         self.login_input.setReadOnly(not enabled)
         self.password_input.setReadOnly(not enabled)
@@ -210,6 +240,9 @@ class MainWindow(QMainWindow):
         self.description_input.setReadOnly(not enabled)
 
     def set_update_state(self, new_record: bool) -> None:
+        """
+        Set controls for record update state
+        """
         self.add_new_button.setEnabled(False)
         self.delete_button.setEnabled(not new_record)
         self.edit_save_button.setEnabled(True)
@@ -217,6 +250,9 @@ class MainWindow(QMainWindow):
         self._enable_inputs(True)
 
     def set_view_state(self) -> None:
+        """
+        Set controls for record view state
+        """
         self.add_new_button.setEnabled(True)
         self.delete_button.setEnabled(True)
         self.edit_save_button.setEnabled(True)
@@ -228,4 +264,7 @@ class MainWindow(QMainWindow):
         self.search_input.clear()
 
     def can_save(self) -> bool:
+        """
+        Check if user has at least provided title and password
+        """
         return len(self.password_input.text()) > 0 and len(self.title_input.text()) > 0

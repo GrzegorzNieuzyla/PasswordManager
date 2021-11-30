@@ -27,6 +27,9 @@ class CreateDatabaseDialog(QDialog):
         self._init_properties()
 
     def _init_layout(self) -> None:
+        """
+        Create controls and place them in layout on window
+        """
         main_layout = QVBoxLayout(self)
 
         file_box = QHBoxLayout()
@@ -61,6 +64,9 @@ class CreateDatabaseDialog(QDialog):
         main_layout.addLayout(button_box)
 
     def _init_properties(self) -> None:
+        """
+        Set options and setup callbacks
+        """
         self.resize(600, 280)
         self.setWindowTitle("Create password database")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
@@ -73,11 +79,17 @@ class CreateDatabaseDialog(QDialog):
         self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
 
     def _on_browse_clicked(self) -> None:
+        """
+        Open dialog and update current database file label
+        """
         filename: str = FileHelper.open_db_file_for_writing()
         if filename:
             self.db_file_input.setText(filename)
 
     def _on_show_clicked(self) -> None:
+        """
+        Toggle password visibility
+        """
         if self.password_input.echoMode() == QLineEdit.EchoMode.Password:
             self.password_input.setEchoMode(QLineEdit.EchoMode.Normal)
             self.confirm_input.setEchoMode(QLineEdit.EchoMode.Normal)
@@ -88,6 +100,9 @@ class CreateDatabaseDialog(QDialog):
             self.show_button.setText("Show")
 
     def _on_password_changed(self) -> None:
+        """
+        Update 'Passwords do not match' label and enable/disable create button
+        """
         password: str = self.password_input.text()
         confirm: str = self.confirm_input.text()
         if (password or confirm) and password != confirm:
@@ -118,6 +133,9 @@ class CreateDatabaseDialog(QDialog):
         return self.password_input.text() == self.confirm_input.text()
 
     def clear_fields(self) -> None:
+        """
+        Clear password inputs and visual effects
+        """
         self.password_input.clear()
         self.confirm_input.clear()
         self.set_strength_label(Strength.Empty)

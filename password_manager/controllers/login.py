@@ -22,6 +22,9 @@ class LoginController:
         self.dialog.password_input.setFocus()
 
     def _on_open_pressed(self) -> None:
+        """
+        Generate key based on password and run main window
+        """
         password = self.dialog.get_password()
         if not password:
             return
@@ -36,10 +39,17 @@ class LoginController:
         self.application_context.main_window_controller.run_window()
 
     def _on_new_db_pressed(self) -> None:
+        """
+        Run create database dialog
+        :return:
+        """
         self.dialog.hide()
         self.application_context.create_database_controller.run_dialog()
 
     def _on_change_db_pressed(self) -> None:
+        """
+        Open file dialog and change current database file
+        """
         filename = FileHelper.open_db_file()
         if not filename:
             return

@@ -17,6 +17,9 @@ from password_manager.utils.password_strength_validator import PasswordStrengthV
 
 class MainWindowController:
     class State(Enum):
+        """
+        Enum indicating the inner state of main window
+        """
         View = 0
         Update = 1
         New = 2
@@ -36,7 +39,6 @@ class MainWindowController:
         self.window.set_on_generate(self._on_generate)
         self.window.get_menubar().set_on_new_db(self._on_new_db)
         self.window.get_menubar().set_on_open_db(self._on_open_db)
-        self.window.get_menubar().set_on_preferences(self._on_preferences)
         self.window.record_list.set_on_clicked(self._on_item_clicked)
         self.window.record_list.set_on_double_clicked(self._on_item_double_clicked)
         self.window.set_on_search_changed(self._on_search_changed)
@@ -49,6 +51,9 @@ class MainWindowController:
         self.window.setFocus()
 
     def try_load_data(self) -> bool:
+        """
+        Try to decrypt records based on previously obtained key
+        """
         try:
             self.window.clear_data()
             raw_records: Dict[int, bytes] = self.application_context.get_data_reader().get_all()
@@ -66,6 +71,9 @@ class MainWindowController:
         self.window.clear_data()
 
     def _on_copy(self) -> None:
+        """
+        Copy password to clipboard
+        """
         if self.current_record is not None:
             QApplication.clipboard().setText(self.current_record.password)
             self.window.set_statusbar_text(f"Password for {self.current_record.title} copied to clipboard")
@@ -73,6 +81,9 @@ class MainWindowController:
             self.window.set_statusbar_text("No active password to copy")
 
     def _on_add_new_record(self) -> None:
+        """
+        Disable readonly on input controls and go into add state
+        """
         if self.state == self.State.New:
             return
         self.current_record = None
@@ -82,6 +93,9 @@ class MainWindowController:
         self.window.set_update_state(True)
 
     def _on_delete(self) -> None:
+        """
+        Ask for confirmation and delete record
+        """
         if self.state in (self.State.View, self.State.Update) and self.current_record is not None:
             if not confirm(f"Remove record {self.current_record.title}?"):
                 return
@@ -91,9 +105,11 @@ class MainWindowController:
 
     def _on_save_edit(self) -> None:
         if self.state == self.State.View:
+            # Go into update mode for current record
             self.window.set_update_state(False)
             self.state = self.State.Update
         elif self.state == self.State.New:
+            # Save current input data to a new record
             new_record: RecordData = self.window.get_data()
             new_record.modificationDate = int(time.time())
             new_record.id_ = self.application_context.get_data_writer().add(new_record.serialize())
@@ -104,6 +120,7 @@ class MainWindowController:
             self.window.set_view_state()
             self.window.clear_filters()
         elif self.state == self.State.Update and self.current_record is not None:
+            # Update current record with given data
             current_id = self.current_record.id_
             updated_record: RecordData = self.window.get_data()
             updated_record.modificationDate = int(time.time())
@@ -119,6 +136,9 @@ class MainWindowController:
             self.window.set_view_state()
 
     def _on_generate(self) -> None:
+        """
+        Show password generation dialog
+        """
         self.password_dialog.clear()
         self.password_dialog.show()
 
@@ -127,9 +147,6 @@ class MainWindowController:
 
     def _on_open_db(self) -> None:
         self.application_context.login_controller.run_dialog()
-
-    def _on_preferences(self) -> None:
-        pass
 
     def _on_password_changed(self, password: str) -> None:
         self.window.set_strength_label(PasswordStrengthValidator().validate_password(password))
@@ -144,10 +161,16 @@ class MainWindowController:
         self.window.set_view_state()
 
     def _on_item_double_clicked(self, record: RecordData) -> None:
+        """
+        Copy to clipboard
+        """
         QApplication.clipboard().setText(record.password)
         self.window.set_statusbar_text(f"Password for {record.title} copied to clipboard")
 
     def _on_password_generation(self) -> None:
+        """
+        Generate password based on options from password generation dialog
+        """
         options = self.password_dialog.get_options()
         password = PasswordGenerator.generate(options)
         self.window.password_input.setText(password)

@@ -10,6 +10,9 @@ class KeyDerivator:
         self.metadata: EncryptionMetadata = metadata
 
     def derive(self) -> bytes:
+        """
+        Derive key from password and encryption options
+        """
         if self.metadata.hmac == 'SHA512':
             module = SHA512
         else:
@@ -17,4 +20,3 @@ class KeyDerivator:
 
         return PBKDF2(self.passphrase, self.metadata.salt, self.metadata.key_len,
                       count=self.metadata.iterations, hmac_hash_module=module)
-

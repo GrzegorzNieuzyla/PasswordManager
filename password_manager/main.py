@@ -8,6 +8,9 @@ from password_manager.utils.logger import Logger
 
 
 def run() -> None:
+    """
+    Initialize QApplication and run GUI
+    """
     Logger.set_level(logging.DEBUG)
     app = QApplication(sys.argv)
     application_context = ApplicationContext()

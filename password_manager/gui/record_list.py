@@ -7,6 +7,10 @@ from password_manager.models.record_data import RecordData
 
 
 class RecordList(QListWidget):
+    """
+    GUI class for displaying and filtering record list
+    """
+
     def __init__(self) -> None:
         super(RecordList, self).__init__()
         self.records: Dict[int, RecordData] = {}
@@ -17,6 +21,9 @@ class RecordList(QListWidget):
         self.itemDoubleClicked.connect(self._on_double_click)  # type: ignore
 
     def add_record(self, record: RecordData) -> None:
+        """
+        Add given record to the view
+        """
         if record.id_ in self.records:
             self.remove_record(record)
         self.records[record.id_] = record
@@ -28,6 +35,9 @@ class RecordList(QListWidget):
         self.setCurrentItem(item)
 
     def remove_record(self, record: RecordData) -> None:
+        """
+        Removes record from the view
+        """
         del self.records[record.id_]
         if record.id_ in self.visible_items:
             item = self.visible_items[record.id_]
@@ -50,11 +60,17 @@ class RecordList(QListWidget):
             self.double_clicked_handler(item.data(Qt.ItemDataRole.UserRole))
 
     def clear_data(self) -> None:
+        """
+        Remove all records from view
+        """
         self.clear()
         self.visible_items = {}
         self.records = {}
 
     def filter(self, query: str) -> None:
+        """
+        Hide records based on search query
+        """
         self.visible_items = {}
         self.clear()
         for record in self.records.values():

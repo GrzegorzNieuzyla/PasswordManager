@@ -12,6 +12,10 @@ from password_manager.utils.logger import Logger
 
 
 class ApplicationContext:
+    """
+    Class holding references to all required objects that need to be retrieved at runtime
+    """
+
     def __init__(self) -> None:
         self.database_manager: Optional[DatabaseManager] = None
         self.metadata_repository: Optional[EncryptionMetadataRepository] = None
@@ -22,12 +26,18 @@ class ApplicationContext:
         self.main_window_controller: MainWindowController = MainWindowController(self)
 
     def initialize_data_access(self, key: bytes) -> None:
+        """
+        Initialize objects for data encryption and decryption
+        """
         if self.database_manager is None:
             raise ValueError("Database manager is not initialized")
         self.data_writer = EncryptedRecordWriter(RecordRepository(self.database_manager), key)
         self.data_reader = EncryptedRecordReader(RecordRepository(self.database_manager), key)
 
     def initialize_database(self, db_path: str) -> None:
+        """
+        Initialize database from filename
+        """
         self.database_manager = DatabaseManager(db_path)
         self.metadata_repository = EncryptionMetadataRepository(self.database_manager)
         Logger.info(f"Switched to database file {db_path}")

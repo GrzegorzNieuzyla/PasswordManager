@@ -28,6 +28,9 @@ class GeneratePasswordDialog(QDialog):
         self._init_properties()
 
     def _init_layout(self) -> None:
+        """
+        Create controls and place them in layout on window
+        """
         main_layout = QVBoxLayout(self)
 
         main_layout.addWidget(self.special_checkbox)
@@ -50,6 +53,9 @@ class GeneratePasswordDialog(QDialog):
         main_layout.addWidget(self.buttons)
 
     def _init_properties(self) -> None:
+        """
+        Set options and setup callbacks
+        """
         self.resize(360, 300)
         self.setWindowTitle("Generate password")
         self.length_slider.setMinimum(5)
@@ -81,6 +87,9 @@ class GeneratePasswordDialog(QDialog):
         self._on_update()
 
     def _on_update(self) -> None:
+        """
+        Update strength label based on changed options
+        """
         options = self.get_options()
         self._set_strength_label(PasswordStrengthValidator().validate(options.special, options.numbers,
                                                                       options.uppercase, options.lowercase,
@@ -100,6 +109,9 @@ class GeneratePasswordDialog(QDialog):
         self.buttons.button(QDialogButtonBox.StandardButton.Ok).setEnabled(strength != Strength.Empty)
 
     def clear(self) -> None:
+        """
+        Reset options to default state
+        """
         self.special_checkbox.setChecked(True)
         self.numbers_checkbox.setChecked(True)
         self.uppercase_checkbox.setChecked(True)

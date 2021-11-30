@@ -14,4 +14,7 @@ class DatabaseManager:
         self.session_factory = sessionmaker(bind=self.engine)
 
     def create_session(self) -> Session:
+        """
+        Create new database session
+        """
         return self.session_factory()

@@ -19,6 +19,9 @@ class PasswordGenerator:
 
     @staticmethod
     def generate(options: GenerationOptions) -> str:
+        """
+        Generate password based on generation options
+        """
         password: List[str] = []
         charset = PasswordGenerator._build_charset(options)
         while len(password) < options.length:
@@ -40,6 +43,9 @@ class PasswordGenerator:
 
     @staticmethod
     def _build_charset(options: GenerationOptions) -> str:
+        """
+        Get all chars allowed for password creation
+        """
         charset: Set[str] = set()
         if options.special:
             charset = charset.union(set(PasswordGenerator.SpecialCharacters))
@@ -56,6 +62,9 @@ class PasswordGenerator:
 
     @staticmethod
     def _patch(password: List[str], charset: str, used: Set[int], length: int) -> None:
+        """
+        Modify password that it contains at least one character from every option
+        """
         ind = secrets.choice(range(length))
         while ind in used:
             ind = secrets.choice(range(length))

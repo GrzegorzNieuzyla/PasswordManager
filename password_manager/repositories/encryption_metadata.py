@@ -7,6 +7,9 @@ class EncryptionMetadataRepository:
         self.db_manager = db_manager
 
     def add_or_update(self, salt: bytes, iterations: int, hmac: str, key_len: int) -> None:
+        """
+        Add or update singleton encryption options record
+        """
         with self.db_manager.create_session() as session:
             metadata: EncryptionMetadata = session.query(EncryptionMetadata).first()
             if metadata is None:
@@ -20,5 +23,8 @@ class EncryptionMetadataRepository:
             session.commit()
 
     def get(self) -> EncryptionMetadata:
+        """
+        Get encryption options from database
+        """
         with self.db_manager.create_session() as session:
             return session.query(EncryptionMetadata).first()

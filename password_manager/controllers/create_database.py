@@ -24,6 +24,9 @@ class CreateDatabaseController:
         self.dialog.browse_button.setFocus()
 
     def _on_password_create_pressed(self) -> None:
+        """
+        Validate passwords and generate key if correct
+        """
         if not self.dialog.are_passwords_matching():
             show_error("Passwords do not match")
             return
@@ -64,9 +67,15 @@ class CreateDatabaseController:
         return None
 
     def _on_password_changed(self, password: str) -> None:
+        """
+        Update password strength label
+        """
         self.dialog.set_strength_label(PasswordStrengthValidator().validate_password(password))
 
     def _on_open_existing_pressed(self) -> None:
+        """
+        Delegate execution to LoginController
+        """
         filename = FileHelper.open_db_file()
         if not filename:
             return

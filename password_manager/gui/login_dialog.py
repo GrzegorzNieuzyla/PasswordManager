@@ -18,6 +18,9 @@ class LoginDialog(QDialog):
         self._init_properties()
 
     def _init_layout(self) -> None:
+        """
+        Create controls and place them in layout on window
+        """
         main_layout = QVBoxLayout(self)
 
         top_label_box = QHBoxLayout()
@@ -47,6 +50,9 @@ class LoginDialog(QDialog):
         main_layout.addLayout(buttons_box)
 
     def _init_properties(self) -> None:
+        """
+        Set options and setup callbacks
+        """
         self.resize(500, 200)
         self.setWindowTitle("Open database")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
@@ -56,6 +62,9 @@ class LoginDialog(QDialog):
         self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
 
     def _enable_open_button(self, password: str) -> None:
+        """
+        Disable open button if password is empty
+        """
         self.open_button.setEnabled(len(password) > 0)
 
     def get_password(self) -> str:

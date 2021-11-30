@@ -2,6 +2,9 @@ import logging
 
 
 class Logger:
+    """
+    Helper class for logging
+    """
     logger = logging.getLogger("Password manager")
 
     @staticmethod

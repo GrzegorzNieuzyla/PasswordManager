@@ -1,8 +1,10 @@
-from password_manager.models.record import Record
-from password_manager.repositories.record import RecordRepository
+from typing import Dict, List
+
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
-from typing import Dict, List
+
+from password_manager.models.record import Record
+from password_manager.repositories.record import RecordRepository
 
 
 class EncryptedRecordReader:
@@ -11,6 +13,9 @@ class EncryptedRecordReader:
         self.key: bytes = key
 
     def get_all(self) -> Dict[int, bytes]:
+        """
+        Decrypt all records and return them
+        """
         records: List[Record] = self.repository.get_all()
         return {record.id: self._decrypt(record.json_record_data, record.aes_iv) for record in records}
 

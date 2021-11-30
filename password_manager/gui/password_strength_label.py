@@ -4,6 +4,10 @@ from password_manager.utils.password_strength_validator import Strength
 
 
 class PasswordStrengthLabel(QLabel):
+    """
+    A GUI element showing the strength of a password
+    """
+
     def __init__(self) -> None:
         super(PasswordStrengthLabel, self).__init__()
 
