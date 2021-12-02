@@ -37,4 +37,4 @@ class Server:
             return jsonify(create_password_handler(url, login))
 
         context = (self.cert_file, self.key_file)
-        app.run(debug=False, ssl_context=context, port=8000)
+        app.run(debug=False, ssl_context=context, port=22222)

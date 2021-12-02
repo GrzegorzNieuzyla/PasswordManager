@@ -1,0 +1,34 @@
+{
+  "name": "Password Manager plugin",
+  "version": "1.0.0",
+  "description": "Plugin for password manager",
+  "manifest_version": 2,
+  "icons": {
+    "128": "icon128.png"
+  },
+  "browser_action": {
+    "default_icon": "icon.png",
+    "popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "notifications",
+    "commands",
+    "tabs",
+    "cookies",
+    "webRequest",
+    "webRequestBlocking",
+    "https://localhost:22222/",
+    "https://localhost:22222/v1/api/sites",
+    "https://localhost:22222/v1/api/password",
+    "https://localhost:22222/v1/api/createpassword"
+  ],
+  "commands": {},
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": true
+  }
+}
