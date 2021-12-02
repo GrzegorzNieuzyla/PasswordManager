@@ -6,6 +6,7 @@ from password_manager.controllers.main_window import MainWindowController
 from password_manager.database_manager import DatabaseManager
 from password_manager.encryption.record_reader import EncryptedRecordReader
 from password_manager.encryption.record_writer import EncryptedRecordWriter
+from password_manager.integration.controller import IntegrationController
 from password_manager.repositories.encryption_metadata import EncryptionMetadataRepository
 from password_manager.repositories.record import RecordRepository
 from password_manager.utils.logger import Logger
@@ -21,6 +22,7 @@ class ApplicationContext:
         self.metadata_repository: Optional[EncryptionMetadataRepository] = None
         self.data_writer: Optional[EncryptedRecordWriter] = None
         self.data_reader: Optional[EncryptedRecordReader] = None
+        self.integration_controller: IntegrationController = IntegrationController('key.pem', 'cert.pem')
         self.create_database_controller: CreateDatabaseController = CreateDatabaseController(self)
         self.login_controller: LoginController = LoginController(self)
         self.main_window_controller: MainWindowController = MainWindowController(self)
@@ -61,3 +63,6 @@ class ApplicationContext:
         if self.database_manager is None:
             raise ValueError("Database manager is not initialized")
         return self.database_manager
+
+    def get_integration_controller(self) -> IntegrationController:
+        return self.integration_controller

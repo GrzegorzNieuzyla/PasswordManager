@@ -1,7 +1,8 @@
 import time
 from enum import Enum
 from json import JSONDecodeError
-from typing import Dict, Optional
+from typing import Dict, Optional, List, Tuple
+from urllib.parse import urlparse
 
 from PyQt6.QtWidgets import QApplication
 
@@ -9,9 +10,10 @@ import password_manager.application_context
 from password_manager.gui.generate_password import GeneratePasswordDialog
 from password_manager.gui.main_window import MainWindow
 from password_manager.gui.message_box import confirm
+from password_manager.integration.controller import IntegrationController
 from password_manager.models.record_data import RecordData
 from password_manager.utils.logger import Logger
-from password_manager.utils.password_generator import PasswordGenerator
+from password_manager.utils.password_generator import PasswordGenerator, GenerationOptions
 from password_manager.utils.password_strength_validator import PasswordStrengthValidator
 
 
@@ -31,6 +33,8 @@ class MainWindowController:
         self.records: Dict[int, RecordData] = {}
         self.current_record: Optional[RecordData] = None
         self.state: MainWindowController.State = self.State.New
+        self.integration_controller: IntegrationController = application_context.get_integration_controller()
+        self._setup_integration()
 
         self.window.set_on_copy(self._on_copy)
         self.window.set_on_add_new_record(self._on_add_new_record)
@@ -69,6 +73,43 @@ class MainWindowController:
 
     def load_new_db(self) -> None:
         self.window.clear_data()
+
+    def _setup_integration(self) -> None:
+        self.integration_controller.set_get_sites_handler(self._on_integration_get_sites)
+        self.integration_controller.set_get_password_handler(self._on_integration_get_password)
+        self.integration_controller.set_create_password_handler(self._on_integration_create_password)
+
+    def _on_integration_get_sites(self) -> List[str]:
+        sites = map(lambda x: self.clear_url(x.loginUrl) if self.clear_url(x.loginUrl) else self.clear_url(x.website),
+                    self.records.values())
+        return list(filter(None, sites))
+
+    def _on_integration_get_password(self, url: str) -> List[Tuple[str, str]]:
+        result = []
+        url = self.clear_url(url)
+        for record in self.records.values():
+            if record.loginUrl:
+                if self.clear_url(record.loginUrl) == url:
+                    result.append((record.login, record.password))
+            elif record.website:
+                if self.clear_url(record.website) == url:
+                    result.append((record.login, record.password))
+        return result
+
+    def _on_integration_create_password(self, url: str, login: str) -> str:
+        password = PasswordGenerator().generate(GenerationOptions(True, True, True, True, "", 20))
+        url = self.clear_url(url)
+
+        record = RecordData(-1, f'{url} - {login}', url, url, login, password, f'Password for {url}', int(time.time()))
+        self.window.record_list.add_record(record)
+        record.id_ = self.application_context.get_data_writer().add(record.serialize())
+        self.records[record.id_] = record
+
+        return password
+
+    @staticmethod
+    def clear_url(url: str) -> str:
+        return urlparse(url).netloc
 
     def _on_copy(self) -> None:
         """

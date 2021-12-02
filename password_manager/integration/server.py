@@ -1,41 +1,40 @@
-import json
-from http.server import BaseHTTPRequestHandler
-from typing import Tuple, Callable, Dict, Union, List, Any
-from urllib.parse import parse_qs
+from typing import Callable, Union, List, Dict, Any
+
+from flask import Flask, Response
+from flask import jsonify
+from flask import request
 
 
-class Server(BaseHTTPRequestHandler):
-    instance: Any = None
+class Server:
+    def __init__(self, cert_file: str, key_file: str) -> None:
+        self.cert_file = cert_file
+        self.key_file = key_file
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super(Server, self).__init__(*args, **kwargs)
-        self.handlers: Dict[str, Callable[[Dict[str, str]], Union[Dict, List]]] = {}
-        self.instance = self
+    def run_server(self, get_sites_handler: Callable[[], Union[List[str], Dict[str, str]]],
+                   get_password_handler: Callable[[str], Union[List[str], Dict[str, str]]],
+                   create_password_handler: Callable[[str, str], Union[List[str], Dict[str, str]]]) -> None:
+        app = Flask(__name__)
 
-    def _set_headers(self, status_code: int) -> None:
-        self.send_response(status_code)
-        self.send_header('Content-type', 'text/json')
-        self.end_headers()
+        @app.route("/v1/api/sites")
+        def sites() -> Response:
+            return jsonify(get_sites_handler())
 
-    def do_GET(self) -> None:
-        path, parameters = self._parse_parameters()
-        if path in self.handlers:
-            try:
-                response = self.handlers[path](parameters)
-                self._set_headers(200)
-                self.wfile.write(json.dumps(response).encode())
-            except Exception as e:
-                self._set_headers(400)
-                self.wfile.write(json.dumps({'error': str(e)}).encode())
-        else:
-            self._set_headers(404)
-            self.wfile.write(f'{{ "error": "No defined handler for \"{path}\"" }}'.encode())
+        @app.route("/v1/api/password")
+        def password() -> Any:
+            url = request.args.get('url', default=None)
+            if not url:
+                return {'error': '"url" parameter not provided'}, 400
+            return jsonify(get_password_handler(url))
 
-    def _parse_parameters(self) -> Tuple[str, dict]:
-        if '?' not in self.path:
-            return self.path, {}
-        split = self.path.split('?')
-        return split[0], parse_qs(split[1])
+        @app.route("/v1/api/createpassword")
+        def create_password() -> Any:
+            login = request.args.get('login', default=None)
+            url = request.args.get('url', default=None)
+            if not url:
+                return {'error': '"url" parameter not provided'}, 400
+            if not login:
+                return {'error': '"login" parameter not provided'}, 400
+            return jsonify(create_password_handler(url, login))
 
-    def register(self, path: str, handler: Callable[[Dict[str, str]], Union[Dict[str, str], List[str]]]) -> None:
-        self.handlers[path] = handler
+        context = (self.cert_file, self.key_file)
+        app.run(debug=False, ssl_context=context, port=8000)
