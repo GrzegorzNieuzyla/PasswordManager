@@ -4,6 +4,7 @@ from json import JSONDecodeError
 from typing import Dict, Optional, List, Tuple
 from urllib.parse import urlparse
 
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QApplication
 
 import password_manager.application_context
@@ -35,6 +36,7 @@ class MainWindowController:
         self.state: MainWindowController.State = self.State.New
         self.integration_controller: IntegrationController = application_context.get_integration_controller()
         self._setup_integration()
+        self._add_record_signal = pyqtSignal(RecordData)
 
         self.window.set_on_copy(self._on_copy)
         self.window.set_on_add_new_record(self._on_add_new_record)
@@ -103,9 +105,9 @@ class MainWindowController:
 
         record = RecordData(-1, f'{clear_url} - {login}', clear_url, url, login, password, f'Password for {clear_url}',
                             int(time.time()))
-        self.window.record_list.add_record(record)
         record.id_ = self.application_context.get_data_writer().add(record.serialize())
         self.records[record.id_] = record
+        self.window.record_list.add_record_signal.emit(record)
         return password
 
     @staticmethod

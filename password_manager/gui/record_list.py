@@ -1,6 +1,6 @@
 from typing import Dict, Callable, Optional
 
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal, pyqtSlot
 from PyQt6.QtWidgets import QListWidget, QListWidgetItem
 
 from password_manager.models.record_data import RecordData
@@ -10,6 +10,7 @@ class RecordList(QListWidget):
     """
     GUI class for displaying and filtering record list
     """
+    add_record_signal = pyqtSignal(RecordData)
 
     def __init__(self) -> None:
         super(RecordList, self).__init__()
@@ -19,6 +20,7 @@ class RecordList(QListWidget):
         self.double_clicked_handler: Optional[Callable[[RecordData], None]] = None
         self.itemClicked.connect(self._on_click)  # type: ignore
         self.itemDoubleClicked.connect(self._on_double_click)  # type: ignore
+        self.add_record_signal.connect(self._add_to_record_list)  # type: ignore
 
     def add_record(self, record: RecordData) -> None:
         """
@@ -83,3 +85,7 @@ class RecordList(QListWidget):
 
     def clear_filter(self) -> None:
         self.filter("")
+
+    @pyqtSlot(RecordData)
+    def _add_to_record_list(self, record: RecordData) -> None:
+        self.add_record(record)
