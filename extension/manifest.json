@@ -22,11 +22,13 @@
     "https://localhost:22222/",
     "https://localhost:22222/v1/api/sites",
     "https://localhost:22222/v1/api/password",
-    "https://localhost:22222/v1/api/createpassword"
+    "https://localhost:22222/v1/api/createpassword",
+    "<all_urls>"
   ],
   "commands": {},
   "background": {
     "scripts": [
+      "inject.js",
       "background.js"
     ],
     "persistent": true

@@ -97,14 +97,15 @@ class MainWindowController:
         return result
 
     def _on_integration_create_password(self, url: str, login: str) -> str:
+        # TODO: use signals instead
         password = PasswordGenerator().generate(GenerationOptions(True, True, True, True, "", 20))
-        url = self.clear_url(url)
+        clear_url = self.clear_url(url)
 
-        record = RecordData(-1, f'{url} - {login}', url, url, login, password, f'Password for {url}', int(time.time()))
+        record = RecordData(-1, f'{clear_url} - {login}', clear_url, url, login, password, f'Password for {clear_url}',
+                            int(time.time()))
         self.window.record_list.add_record(record)
         record.id_ = self.application_context.get_data_writer().add(record.serialize())
         self.records[record.id_] = record
-
         return password
 
     @staticmethod

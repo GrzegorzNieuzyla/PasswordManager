@@ -41,7 +41,7 @@ class IntegrationController:
         if not self.create_password_handler:
             raise Exception("No handler defined")
         password = self.create_password_handler(url, login)
-        return {'password': password}
+        return {'password': password, 'login': login}
 
     def get_routing(self) -> Dict[str, Any]:
         return {
