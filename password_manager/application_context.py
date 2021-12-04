@@ -1,8 +1,5 @@
 from typing import Optional
 
-from password_manager.controllers.create_database import CreateDatabaseController
-from password_manager.controllers.login import LoginController
-from password_manager.controllers.main_window import MainWindowController
 from password_manager.database_manager import DatabaseManager
 from password_manager.encryption.record_reader import EncryptedRecordReader
 from password_manager.encryption.record_writer import EncryptedRecordWriter
@@ -18,11 +15,16 @@ class ApplicationContext:
     """
 
     def __init__(self) -> None:
+        # avoid circular imports
+        from password_manager.controllers.create_database import CreateDatabaseController
+        from password_manager.controllers.login import LoginController
+        from password_manager.controllers.main_window import MainWindowController
+
         self.database_manager: Optional[DatabaseManager] = None
         self.metadata_repository: Optional[EncryptionMetadataRepository] = None
         self.data_writer: Optional[EncryptedRecordWriter] = None
         self.data_reader: Optional[EncryptedRecordReader] = None
-        self.integration_controller: IntegrationController = IntegrationController('key.pem', 'cert.pem', 22222)
+        self.integration_controller: Optional[IntegrationController] = None
         self.create_database_controller: CreateDatabaseController = CreateDatabaseController(self)
         self.login_controller: LoginController = LoginController(self)
         self.main_window_controller: MainWindowController = MainWindowController(self)
@@ -65,4 +67,9 @@ class ApplicationContext:
         return self.database_manager
 
     def get_integration_controller(self) -> 'IntegrationController':
+        if self.integration_controller is None:
+            raise ValueError("Integration controller is not initialized")
         return self.integration_controller
+
+    def initialize_integration_server(self, key_file: str, cert_file: str, port: int) -> None:
+        self.integration_controller = IntegrationController(key_file, cert_file, port)

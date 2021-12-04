@@ -14,6 +14,7 @@ def run() -> None:
     Logger.set_level(logging.DEBUG)
     app = QApplication(sys.argv)
     application_context = ApplicationContext()
+    application_context.initialize_integration_server('key.pem', 'cert.pem', 22222)
     application_context.create_database_controller.run_dialog()
     app.exec()
 

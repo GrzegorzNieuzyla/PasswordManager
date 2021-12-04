@@ -1,6 +1,7 @@
 import time
 from enum import Enum
 from json import JSONDecodeError
+from os import _exit
 from typing import Dict, Optional, List, Tuple
 from urllib.parse import urlparse
 
@@ -34,9 +35,9 @@ class MainWindowController:
         self.records: Dict[int, RecordData] = {}
         self.current_record: Optional[RecordData] = None
         self.state: MainWindowController.State = self.State.New
-        self.integration_controller: IntegrationController = application_context.get_integration_controller()
-        self._setup_integration()
+        self.integration_controller: Optional[IntegrationController] = None
         self._add_record_signal = pyqtSignal(RecordData)
+        self._server_running = False
 
         self.window.set_on_copy(self._on_copy)
         self.window.set_on_add_new_record(self._on_add_new_record)
@@ -51,6 +52,7 @@ class MainWindowController:
         self.window.set_on_password_change(self._on_password_changed)
         self.password_dialog.set_on_ok(self._on_password_generation)
         self.window.set_update_state(True)
+        self.window.set_on_close(self.on_close)
 
     def run_window(self) -> None:
         self.window.show()
@@ -68,6 +70,7 @@ class MainWindowController:
                 self.window.record_list.add_record(record)
             self.window.record_list.clearSelection()
             Logger.info(f"Loaded records: {self.records}")
+            self.run_integration_server()
             return True
         except (JSONDecodeError, ValueError) as e:
             Logger.error(f"Main window controller: {e}")
@@ -77,9 +80,11 @@ class MainWindowController:
         self.window.clear_data()
 
     def _setup_integration(self) -> None:
-        self.integration_controller.set_get_sites_handler(self._on_integration_get_sites)
-        self.integration_controller.set_get_password_handler(self._on_integration_get_password)
-        self.integration_controller.set_create_password_handler(self._on_integration_create_password)
+        if self.integration_controller:
+            self.integration_controller.set_get_sites_handler(self._on_integration_get_sites)
+            self.integration_controller.set_get_password_handler(self._on_integration_get_password)
+            self.integration_controller.set_create_password_handler(self._on_integration_create_password)
+            self.integration_controller.start_server()
 
     def _on_integration_get_sites(self) -> List[str]:
         sites = map(lambda x: self.clear_url(x.loginUrl) if self.clear_url(x.loginUrl) else self.clear_url(x.website),
@@ -224,3 +229,14 @@ class MainWindowController:
         self.password_dialog.clear()
         self.password_dialog.hide()
         self.window.on_input_changed()
+
+    def run_integration_server(self) -> None:
+        if self._server_running:
+            return
+        self.integration_controller = self.application_context.get_integration_controller()
+        self._setup_integration()
+        self._server_running = True
+
+    @staticmethod
+    def on_close() -> None:
+        _exit(0)

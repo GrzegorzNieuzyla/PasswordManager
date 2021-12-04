@@ -37,5 +37,11 @@ class Server:
                 return {'error': '"login" parameter not provided'}, 400
             return jsonify(create_password_handler(url, login))
 
+        @app.route("/__shutdown")
+        def shutdown() -> None:
+            fun = request.environ.get('werkzeug.server.shutdown')
+            if fun:
+                fun()
+
         context = (self.cert_file, self.key_file)
         app.run(debug=False, ssl_context=context, port=port)

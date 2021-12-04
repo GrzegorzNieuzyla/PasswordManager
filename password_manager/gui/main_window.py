@@ -1,5 +1,6 @@
-from typing import Callable
+from typing import Callable, Optional
 
+from PyQt6 import QtGui
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSizePolicy, \
     QMainWindow, QPlainTextEdit, QGroupBox, QWidget, QStatusBar
@@ -31,6 +32,7 @@ class MainWindow(QMainWindow):
         self.website_input: QLineEdit = QLineEdit()
         self.login_url_input: QLineEdit = QLineEdit()
         self.description_input: QPlainTextEdit = QPlainTextEdit()
+        self._on_close: Optional[Callable[[], None]] = None
 
         self.add_new_button: QPushButton = QPushButton("Add new record")
         self.delete_button: QPushButton = QPushButton("Delete")
@@ -45,6 +47,10 @@ class MainWindow(QMainWindow):
         self.setStatusBar(QStatusBar())
         self._init_layout()
         self._init_properties()
+
+    def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
+        if self._on_close:
+            self._on_close()
 
     def _init_layout(self) -> None:
         """
@@ -269,3 +275,6 @@ class MainWindow(QMainWindow):
         Check if user has at least provided title and password
         """
         return len(self.password_input.text()) > 0 and len(self.title_input.text()) > 0
+
+    def set_on_close(self, handler: Callable[[], None]) -> None:
+        self._on_close = handler
