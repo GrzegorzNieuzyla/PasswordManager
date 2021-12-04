@@ -99,7 +99,6 @@ class MainWindowController:
         return result
 
     def _on_integration_create_password(self, url: str, login: str) -> str:
-        # TODO: use signals instead
         password = PasswordGenerator().generate(GenerationOptions(True, True, True, True, "", 20))
         clear_url = self.clear_url(url)
 

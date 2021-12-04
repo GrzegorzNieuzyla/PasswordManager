@@ -7,14 +7,16 @@ from password_manager.integration.server import Server
 
 
 class IntegrationController:
-    def __init__(self, key_file: str, cert_file: str) -> None:
+    def __init__(self, key_file: str, cert_file: str, port: int) -> None:
         self.get_sites_handler: Optional[Callable[[], List[str]]] = None
         self.get_password_handler: Optional[Callable[[str], List[Tuple[str, str]]]] = None
         self.create_password_handler: Optional[Callable[[str, str], str]] = None
         self.server = Server(key_file=key_file, cert_file=cert_file)
+        self.port = port
         self.server_thread = Thread(target=lambda s=self: s.server.run_server(s.handle_get_sites,
                                                                               s.handle_get_password,
-                                                                              s.handle_create_password))
+                                                                              s.handle_create_password,
+                                                                              s.port))
         self.server_thread.start()
 
     def set_get_sites_handler(self, handler: Callable[[], List[str]]) -> None:

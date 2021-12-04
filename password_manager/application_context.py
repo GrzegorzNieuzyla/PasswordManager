@@ -22,7 +22,7 @@ class ApplicationContext:
         self.metadata_repository: Optional[EncryptionMetadataRepository] = None
         self.data_writer: Optional[EncryptedRecordWriter] = None
         self.data_reader: Optional[EncryptedRecordReader] = None
-        self.integration_controller: IntegrationController = IntegrationController('key.pem', 'cert.pem')
+        self.integration_controller: IntegrationController = IntegrationController('key.pem', 'cert.pem', 22222)
         self.create_database_controller: CreateDatabaseController = CreateDatabaseController(self)
         self.login_controller: LoginController = LoginController(self)
         self.main_window_controller: MainWindowController = MainWindowController(self)
@@ -64,5 +64,5 @@ class ApplicationContext:
             raise ValueError("Database manager is not initialized")
         return self.database_manager
 
-    def get_integration_controller(self) -> IntegrationController:
+    def get_integration_controller(self) -> 'IntegrationController':
         return self.integration_controller

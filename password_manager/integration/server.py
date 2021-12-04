@@ -12,7 +12,8 @@ class Server:
 
     def run_server(self, get_sites_handler: Callable[[], Union[List[str], Dict[str, str]]],
                    get_password_handler: Callable[[str], Union[List[str], Dict[str, str]]],
-                   create_password_handler: Callable[[str, str], Union[List[str], Dict[str, str]]]) -> None:
+                   create_password_handler: Callable[[str, str], Union[List[str], Dict[str, str]]],
+                   port: int) -> None:
         app = Flask(__name__)
 
         @app.route("/v1/api/sites")
@@ -37,4 +38,4 @@ class Server:
             return jsonify(create_password_handler(url, login))
 
         context = (self.cert_file, self.key_file)
-        app.run(debug=False, ssl_context=context, port=22222)
+        app.run(debug=False, ssl_context=context, port=port)

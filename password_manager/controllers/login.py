@@ -1,4 +1,3 @@
-import password_manager.application_context
 from password_manager.encryption.key_derivator import KeyDerivator
 from password_manager.gui.login_dialog import LoginDialog
 from password_manager.utils.file_helper import FileHelper
@@ -41,7 +40,6 @@ class LoginController:
     def _on_new_db_pressed(self) -> None:
         """
         Run create database dialog
-        :return:
         """
         self.dialog.hide()
         self.application_context.create_database_controller.run_dialog()
