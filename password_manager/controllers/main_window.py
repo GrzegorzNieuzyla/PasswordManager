@@ -87,8 +87,7 @@ class MainWindowController:
             self.integration_controller.start_server()
 
     def _on_integration_get_sites(self) -> List[str]:
-        sites = map(lambda x: self.clear_url(x.loginUrl) if self.clear_url(x.loginUrl) else self.clear_url(x.website),
-                    self.records.values())
+        sites = map(lambda x: x.loginUrl if self.clear_url(x.loginUrl) else x.website, self.records.values())
         return list(filter(None, sites))
 
     def _on_integration_get_password(self, url: str) -> List[Tuple[str, str]]:
@@ -116,6 +115,8 @@ class MainWindowController:
 
     @staticmethod
     def clear_url(url: str) -> str:
+        if not url.startswith('http'):
+            url = f'https://{url}'
         return urlparse(url).netloc
 
     def _on_copy(self) -> None:

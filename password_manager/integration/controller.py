@@ -3,8 +3,6 @@
 from threading import Thread
 from typing import List, Callable, Optional, Tuple, Dict, Union, Any
 
-import requests
-
 from password_manager.integration.server import Server
 
 
@@ -55,6 +53,3 @@ class IntegrationController:
             "v1/api/password": self.handle_get_password,
             "v1/api/createpassword": self.handle_create_password,
         }
-
-    def kill_server(self) -> None:
-        requests.get(f'http://localhost:{self.port}/__shutdown')
