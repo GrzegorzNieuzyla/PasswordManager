@@ -28,6 +28,7 @@ class ApplicationContext:
         self.create_database_controller: CreateDatabaseController = CreateDatabaseController(self)
         self.login_controller: LoginController = LoginController(self)
         self.main_window_controller: MainWindowController = MainWindowController(self)
+        self.run_server = True
 
     def initialize_data_access(self, key: bytes) -> None:
         """

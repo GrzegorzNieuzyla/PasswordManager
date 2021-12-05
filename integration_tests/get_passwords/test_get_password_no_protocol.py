@@ -1,7 +1,7 @@
 import json
 from urllib.parse import quote_plus
 
-from integration_tests.utils import IntegrationServerFixture
+from integration_tests.fixture import IntegrationServerFixture
 from password_manager.models.record_data import RecordData
 
 

@@ -1,4 +1,4 @@
-from integration_tests.utils import IntegrationServerFixture
+from integration_tests.fixture import IntegrationServerFixture
 
 
 def test_create_records_compare_with_request():

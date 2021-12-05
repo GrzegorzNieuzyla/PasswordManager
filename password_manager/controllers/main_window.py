@@ -232,7 +232,7 @@ class MainWindowController:
         self.window.on_input_changed()
 
     def run_integration_server(self) -> None:
-        if self._server_running:
+        if self._server_running or not self.application_context.run_server:
             return
         self.integration_controller = self.application_context.get_integration_controller()
         self._setup_integration()
