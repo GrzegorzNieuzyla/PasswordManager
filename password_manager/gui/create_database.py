@@ -75,6 +75,7 @@ class CreateDatabaseDialog(QDialog):
         self.browse_button.clicked.connect(self._on_browse_clicked)  # type: ignore
         self.password_input.textEdited.connect(self._on_password_changed)  # type: ignore
         self.confirm_input.textEdited.connect(self._on_password_changed)  # type: ignore
+        self.db_file_input.textEdited.connect(self._on_input_change)  # type: ignore
         self.create_button.setEnabled(False)
         self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
 
@@ -109,7 +110,11 @@ class CreateDatabaseDialog(QDialog):
             self.password_match_label.setText('<span style="color:red;">Passwords do not match!</span>')
         else:
             self.password_match_label.clear()
-        self.create_button.setEnabled(self.are_passwords_matching() and len(self.password_input.text()) > 0)
+        self._on_input_change()
+
+    def _on_input_change(self):
+        self.create_button.setEnabled(
+            self.are_passwords_matching() and len(self.password_input.text()) > 0 and len(self.get_database_path()) > 0)
 
     def get_password(self) -> str:
         return self.password_input.text()
