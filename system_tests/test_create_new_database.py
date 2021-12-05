@@ -47,7 +47,7 @@ def test_create_database_dialog_database_creation():
 def test_create_database_dialog_existing_database():
     with SystemTestFixture() as fixture:
         dialog = fixture.application_context.create_database_controller.dialog
-        db_file = fixture.get_filepath("db.pmdb")
+        db_file = fixture.get_filepath("res/empty.pmdb")
         FileHelper.open_db_file = lambda: db_file
         fixture.click_button(dialog.open_existing_button)
         QTest.qWait(500)

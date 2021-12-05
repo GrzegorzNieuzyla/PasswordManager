@@ -35,3 +35,16 @@ def test_login_open_db():
         window = fixture.application_context.main_window_controller.window
         assert window.isVisible()
         assert window.record_list.count() == 1
+
+
+def test_login_open_db_incorrect_password():
+    with SystemTestFixture() as fixture:
+        dialog = fixture.application_context.login_controller.dialog
+        db = fixture.get_filepath("res/database.pmdb")
+        fixture.open_existing_database(db)
+        fixture.insert_text(dialog.password_input, "password2")
+        fixture.click_button(dialog.open_button)
+        QTest.qWait(2000)  # wait for key derivation
+        window = fixture.application_context.main_window_controller.window
+        assert not window.isVisible()
+        assert dialog.wrong_password_label.text()
