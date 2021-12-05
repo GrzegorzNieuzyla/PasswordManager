@@ -16,8 +16,8 @@ class IntegrationServerFixture:
         self.app = QApplication([])
         self.context = ApplicationContext()
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        self.context.integration_controller = IntegrationController(f'{dir_path}/test_key.pem',
-                                                                    f'{dir_path}/test_cert.pem',
+        self.context.integration_controller = IntegrationController(f'{dir_path}/res/test_key.pem',
+                                                                    f'{dir_path}/res/test_cert.pem',
                                                                     port_number)
         self.context.integration_controller.server_thread.daemon = True
         self.context.initialize_database(db_location)
