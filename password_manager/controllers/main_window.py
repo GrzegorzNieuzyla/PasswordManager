@@ -211,6 +211,7 @@ class MainWindowController:
         self.window.set_data(record)
         self.state = self.State.View
         self.window.set_view_state()
+        self._on_password_changed(self.window.password_input.text())
 
     def _on_item_double_clicked(self, record: RecordData) -> None:
         """
