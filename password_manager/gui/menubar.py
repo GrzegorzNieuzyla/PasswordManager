@@ -14,6 +14,7 @@ class MenuBar(QMenuBar):
         self.file_menu: QMenu = self.addMenu("&File")
         self.new_db_action: QAction = self.file_menu.addAction("&Add new database file")
         self.open_db_action: QAction = self.file_menu.addAction("Open &database file")
+        self.options_actions: QAction = self.file_menu.addAction("&Options")
         self.quit_action: QAction = self.file_menu.addAction("&Quit")
         self.quit_action.triggered.connect(lambda: QApplication.quit())  # type: ignore
         self.file_menu.setMinimumWidth(250)
@@ -23,3 +24,6 @@ class MenuBar(QMenuBar):
 
     def set_on_open_db(self, callback: Callable[[], None]) -> None:
         self.open_db_action.triggered.connect(callback)  # type: ignore
+
+    def set_on_options(self, callback: Callable[[], None]) -> None:
+        self.options_actions.triggered.connect(callback)  # type: ignore

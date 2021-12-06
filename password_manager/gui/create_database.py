@@ -112,7 +112,7 @@ class CreateDatabaseDialog(QDialog):
             self.password_match_label.clear()
         self._on_input_change()
 
-    def _on_input_change(self):
+    def _on_input_change(self) -> None:
         self.create_button.setEnabled(
             self.are_passwords_matching() and len(self.password_input.text()) > 0 and len(self.get_database_path()) > 0)
 

@@ -12,10 +12,12 @@ import password_manager.application_context
 from password_manager.gui.generate_password import GeneratePasswordDialog
 from password_manager.gui.main_window import MainWindow
 from password_manager.gui.message_box import confirm
+from password_manager.gui.preferences_dialog import PreferencesDialog
 from password_manager.integration.controller import IntegrationController
 from password_manager.models.record_data import RecordData
 from password_manager.utils.logger import Logger
-from password_manager.utils.password_generator import PasswordGenerator, GenerationOptions
+from password_manager.utils.options import set_generation_options
+from password_manager.utils.password_generator import PasswordGenerator
 from password_manager.utils.password_strength_validator import PasswordStrengthValidator
 
 
@@ -31,6 +33,7 @@ class MainWindowController:
     def __init__(self, application_context: "password_manager.application_context.ApplicationContext") -> None:
         self.window: MainWindow = MainWindow()
         self.password_dialog: GeneratePasswordDialog = GeneratePasswordDialog()
+        self.preferences_dialog: PreferencesDialog = PreferencesDialog()
         self.application_context: "password_manager.application_context.ApplicationContext" = application_context
         self.records: Dict[int, RecordData] = {}
         self.current_record: Optional[RecordData] = None
@@ -46,6 +49,8 @@ class MainWindowController:
         self.window.set_on_generate(self._on_generate)
         self.window.get_menubar().set_on_new_db(self._on_new_db)
         self.window.get_menubar().set_on_open_db(self._on_open_db)
+        self.window.get_menubar().set_on_options(self._on_preferences)
+        self.preferences_dialog.set_on_save(self._on_preferences_save)
         self.window.record_list.set_on_clicked(self._on_item_clicked)
         self.window.record_list.set_on_double_clicked(self._on_item_double_clicked)
         self.window.set_on_search_changed(self._on_search_changed)
@@ -103,7 +108,7 @@ class MainWindowController:
         return result
 
     def _on_integration_create_password(self, url: str, login: str) -> str:
-        password = PasswordGenerator().generate(GenerationOptions(True, True, True, True, "", 20))
+        password = PasswordGenerator().generate(self.application_context.password_generation_options)
         clear_url = self.clear_url(url)
 
         record = RecordData(-1, f'{clear_url} - {login}', clear_url, url, login, password, f'Password for {clear_url}',
@@ -191,8 +196,15 @@ class MainWindowController:
         """
         Show password generation dialog
         """
-        self.password_dialog.clear()
-        self.password_dialog.show()
+        self.password_dialog.run_dialog(self.application_context.password_generation_options)
+
+    def _on_preferences(self) -> None:
+        self.preferences_dialog.run_dialog(self.application_context.password_generation_options)
+
+    def _on_preferences_save(self) -> None:
+        self.application_context.password_generation_options = self.preferences_dialog.get_options()
+        set_generation_options(self.application_context.password_generation_options)
+        self.preferences_dialog.close()
 
     def _on_new_db(self) -> None:
         self.application_context.create_database_controller.run_dialog()

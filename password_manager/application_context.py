@@ -7,6 +7,8 @@ from password_manager.integration.controller import IntegrationController
 from password_manager.repositories.encryption_metadata import EncryptionMetadataRepository
 from password_manager.repositories.record import RecordRepository
 from password_manager.utils.logger import Logger
+from password_manager.utils.options import get_generation_options
+from password_manager.utils.password_generator import GenerationOptions
 
 
 class ApplicationContext:
@@ -28,6 +30,7 @@ class ApplicationContext:
         self.create_database_controller: CreateDatabaseController = CreateDatabaseController(self)
         self.login_controller: LoginController = LoginController(self)
         self.main_window_controller: MainWindowController = MainWindowController(self)
+        self.password_generation_options: GenerationOptions = get_generation_options()
         self.run_server = True
 
     def initialize_data_access(self, key: bytes) -> None:
