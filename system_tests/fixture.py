@@ -20,7 +20,7 @@ class SystemTestFixture:
                                                                self.get_filepath('test_cert.pem'), 20000)
         self.application_context.create_database_controller.run_dialog()
         self.db_file = None
-        QTest.qWait(500)
+        QTest.qWaitForWindowExposed(self.application_context.create_database_controller.dialog)
 
     @staticmethod
     def get_filepath(name: str) -> str:
@@ -49,7 +49,7 @@ class SystemTestFixture:
         self.open_existing_database(file)
         self.insert_text(self.application_context.login_controller.dialog.password_input, password)
         self.click_button(self.application_context.login_controller.dialog.open_button)
-        QTest.qWait(2000)
+        QTest.qWaitForWindowExposed(self.application_context.main_window_controller.window)
 
     def open_existing_database(self, filepath: str):
         FileHelper.open_db_file = lambda: filepath

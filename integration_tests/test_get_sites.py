@@ -4,7 +4,7 @@ from password_manager.models.record_data import RecordData
 
 def test_get_sites():
     with IntegrationServerFixture() as fixture:
-        fixture.run_integration_server(22233, 'test.db', 'password')
+        fixture.run_integration_server(22233, 'test.pmdb', 'password')
         record1 = RecordData(1, "", "", "https://website1.com", "", "", "", 0)
         record2 = RecordData(2, "", "", "https://website2.com", "", "", "", 0)
         fixture.context.data_writer.add(record1.serialize())

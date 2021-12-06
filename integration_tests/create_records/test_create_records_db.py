@@ -4,7 +4,7 @@ from password_manager.models.record_data import RecordData
 
 def test_create_records_compare_with_database():
     with IntegrationServerFixture() as fixture:
-        fixture.run_integration_server(22223, 'test.db', 'password')
+        fixture.run_integration_server(22223, 'test.pmdb', 'password')
         login = 'xxxx'
         response = fixture.make_request(
             f"https://localhost:22223/v1/api/createpassword?url=www.google.com&login={login}")

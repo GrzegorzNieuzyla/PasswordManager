@@ -31,7 +31,8 @@ def test_login_open_db():
         fixture.open_existing_database(db)
         fixture.insert_text(dialog.password_input, "password")
         fixture.click_button(dialog.open_button)
-        QTest.qWait(2000)  # wait for key derivation
+        QTest.qWaitForWindowExposed(
+            fixture.application_context.main_window_controller.window)  # wait for key derivation
         window = fixture.application_context.main_window_controller.window
         assert window.isVisible()
         assert window.record_list.count() == 1
@@ -44,7 +45,8 @@ def test_login_open_db_incorrect_password():
         fixture.open_existing_database(db)
         fixture.insert_text(dialog.password_input, "password2")
         fixture.click_button(dialog.open_button)
-        QTest.qWait(2000)  # wait for key derivation
+        QTest.qWaitForWindowExposed(
+            fixture.application_context.main_window_controller.window)  # wait for key derivation
         window = fixture.application_context.main_window_controller.window
         assert not window.isVisible()
         assert dialog.wrong_password_label.text()

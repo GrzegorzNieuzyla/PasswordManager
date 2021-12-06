@@ -3,7 +3,7 @@ from integration_tests.fixture import IntegrationServerFixture
 
 def test_create_records_compare_with_request():
     with IntegrationServerFixture() as fixture:
-        fixture.run_integration_server(22224, 'test.db', 'password')
+        fixture.run_integration_server(22224, 'test.pmdb', 'password')
         login = 'zxcv'
         response = fixture.make_request(
             f"https://localhost:22224/v1/api/createpassword?url=www.google.com&login={login}")

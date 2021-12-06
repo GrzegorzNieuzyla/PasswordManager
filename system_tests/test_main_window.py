@@ -1,6 +1,8 @@
+from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import QApplication, QLineEdit, QDialogButtonBox
 
 from password_manager.controllers import main_window
+from password_manager.utils.password_generator import GenerationOptions
 from system_tests.fixture import SystemTestFixture
 
 
@@ -110,3 +112,32 @@ def test_main_window_show_password():
         assert window.password_input.echoMode() == QLineEdit.EchoMode.Password
         fixture.click_button(window.show_button)
         assert window.password_input.echoMode() == QLineEdit.EchoMode.Normal
+
+
+def test_main_window_preferences():
+    with SystemTestFixture() as fixture:
+        fixture.open_main_window_with_temp_db("res/empty.pmdb", "db.pmdb", "password")
+        window = fixture.application_context.main_window_controller.window
+
+        fixture.application_context.password_generation_options = GenerationOptions(True, True, True, True, "",
+                                                                                    25)  # mock initial user preferences
+        window.get_menubar().options_actions.trigger()
+        dialog_preferences = fixture.application_context.main_window_controller.preferences_dialog
+        assert dialog_preferences.isVisible()
+        fixture.click_button(dialog_preferences.cancel_button)
+        assert not dialog_preferences.isVisible()
+
+        window.get_menubar().options_actions.trigger()
+        QTest.qWaitForWindowExposed(dialog_preferences)
+        dialog_preferences.lowercase_checkbox.setChecked(False)
+        dialog_preferences.uppercase_checkbox.setChecked(False)
+        fixture.click_button(dialog_preferences.save_button)
+        assert not dialog_preferences.isVisible()
+
+        dialog_generate = fixture.application_context.main_window_controller.password_dialog
+        fixture.click_button(window.generate_button)
+        assert dialog_generate.isVisible()
+        assert not dialog_generate.uppercase_checkbox.isChecked()
+        assert not dialog_generate.lowercase_checkbox.isChecked()
+        assert dialog_generate.special_checkbox.isChecked()
+        assert dialog_generate.numbers_checkbox.isChecked()

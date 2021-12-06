@@ -7,7 +7,7 @@ from password_manager.models.record_data import RecordData
 
 def test_get_password_for_website_without_protocol_in_url():
     with IntegrationServerFixture() as fixture:
-        fixture.run_integration_server(22245, 'test.db', 'password')
+        fixture.run_integration_server(22245, 'test.pmdb', 'password')
         record = RecordData(1, "", "", "website.com", "login1", "password1", "", 0)
         record2 = RecordData(2, "", "website.com", "", "login2", "password2", "", 0)
         fixture.context.data_writer.add(record.serialize())

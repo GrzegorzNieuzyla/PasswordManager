@@ -40,7 +40,8 @@ def test_create_database_dialog_database_creation():
         fixture.click_button(dialog.create_button)
         assert os.path.exists(db_file)
 
-        QTest.qWait(2000)  # wait for key derivation
+        QTest.qWaitForWindowExposed(
+            fixture.application_context.main_window_controller.window)  # wait for key derivation
         assert fixture.application_context.main_window_controller.window.isVisible()
 
 
@@ -50,6 +51,7 @@ def test_create_database_dialog_existing_database():
         db_file = fixture.get_filepath("res/empty.pmdb")
         FileHelper.open_db_file = lambda: db_file
         fixture.click_button(dialog.open_existing_button)
-        QTest.qWait(500)
+        QTest.qWaitForWindowExposed(fixture.application_context.login_controller.dialog)
+
         assert fixture.application_context.login_controller.dialog.isVisible()
         assert fixture.application_context.login_controller.dialog.current_db_label.text().endswith(db_file)

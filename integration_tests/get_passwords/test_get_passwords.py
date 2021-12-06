@@ -7,7 +7,7 @@ from password_manager.models.record_data import RecordData
 
 def test_get_multiple_passwords():
     with IntegrationServerFixture() as fixture:
-        fixture.run_integration_server(22244, 'test.db', 'password')
+        fixture.run_integration_server(22244, 'test.pmdb', 'password')
         record1 = RecordData(22, "title1", "", "https://website.com", "login1", "password1", "", 0)
         record2 = RecordData(222, "title2", "", "https://website.com", "login2", "password2", "", 0)
         fixture.context.data_writer.add(record1.serialize())
