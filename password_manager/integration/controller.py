@@ -1,13 +1,17 @@
 # TODO: Refresh periodically every n minutes or on click
 # TODO: Refresh GUI on data change
+import os
 from threading import Thread
 from typing import List, Callable, Optional, Tuple, Dict, Union, Any
 
+from password_manager.certificate import generate_certificate
 from password_manager.integration.server import Server
 
 
 class IntegrationController:
     def __init__(self, key_file: str, cert_file: str, port: int) -> None:
+        if not os.path.exists(key_file) or not os.path.exists(cert_file):
+            generate_certificate(cert_file, key_file)
         self.get_sites_handler: Optional[Callable[[], List[str]]] = None
         self.get_password_handler: Optional[Callable[[str], List[Tuple[str, str]]]] = None
         self.create_password_handler: Optional[Callable[[str, str], str]] = None

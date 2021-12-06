@@ -1,7 +1,9 @@
 attrs==21.2.0
 certifi==2021.10.8
+cffi==1.15.0
 charset-normalizer==2.0.9
 click==7.1.2
+cryptography==36.0.0
 Flask==2.0.2
 greenlet==1.1.2
 idna==3.3
@@ -14,7 +16,9 @@ mypy-extensions==0.4.3
 packaging==21.3
 pluggy==1.0.0
 py==1.11.0
+pycparser==2.21
 pycryptodome==3.11.0
+pyOpenSSL==21.0.0
 pyparsing==3.0.6
 PyQt6==6.2.1
 pyqt6-plugins==6.1.0.2.2
@@ -27,8 +31,13 @@ qt6-applications==6.1.0.2.2
 qt6-tools==6.1.0.1.2
 QtPy==1.11.2
 requests==2.26.0
+six==1.16.0
 SQLAlchemy==1.4.26
 toml==0.10.2
+types-cryptography==3.3.9
+types-enum34==1.1.1
+types-ipaddress==1.0.1
+types-pyOpenSSL==21.0.1
 types-requests==2.26.1
 typing-extensions==3.10.0.2
 urllib3==1.26.7
