@@ -76,7 +76,7 @@ class MainWindowController:
             self.window.record_list.clearSelection()
             Logger.info(f"Loaded records: {self.records}")
             self.run_integration_server()
-            if self.application_context.database_manager:
+            if self.application_context.database_manager and self.application_context.save_preferences:
                 set_last_file(self.application_context.database_manager.path)
             return True
         except (JSONDecodeError, ValueError) as e:
@@ -205,7 +205,8 @@ class MainWindowController:
 
     def _on_preferences_save(self) -> None:
         self.application_context.password_generation_options = self.preferences_dialog.get_options()
-        set_generation_options(self.application_context.password_generation_options)
+        if self.application_context.save_preferences:
+            set_generation_options(self.application_context.password_generation_options)
         self.preferences_dialog.close()
 
     def _on_new_db(self) -> None:

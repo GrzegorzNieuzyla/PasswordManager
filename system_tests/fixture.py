@@ -15,6 +15,7 @@ class SystemTestFixture:
         self.app = QApplication([])
         self.application_context = ApplicationContext()
         self.application_context.run_server = False
+        self.application_context.save_preferences = False
         self.application_context.initialize_integration_server(self.get_filepath('test_key.pem'),
                                                                self.get_filepath('test_cert.pem'), 20000)
         self.application_context.create_database_controller.run_dialog()

@@ -32,6 +32,7 @@ class ApplicationContext:
         self.main_window_controller: MainWindowController = MainWindowController(self)
         self.password_generation_options: GenerationOptions = get_generation_options()
         self.run_server = True
+        self.save_preferences = True
 
     def initialize_data_access(self, key: bytes) -> None:
         """
