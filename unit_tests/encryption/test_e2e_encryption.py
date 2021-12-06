@@ -6,8 +6,6 @@ from password_manager.models.record import Record
 
 
 def test_e2e_encryption(mocker: MockerFixture):
-    import os
-    x = os.getcwd()
     repository = mocker.MagicMock()
     enc_data = {}
 

@@ -12,7 +12,7 @@ from password_manager.utils.password_strength_validator import PasswordStrengthV
 class CreateDatabaseController:
     def __init__(self, application_context: "password_manager.application_context.ApplicationContext") -> None:
         self.dialog = CreateDatabaseDialog()
-        self.dialog.set_on_create(self._on_password_create_pressed)
+        self.dialog.set_on_create(self._on_create_pressed)
         self.dialog.set_on_password_change(self._on_password_changed)
         self.dialog.set_on_open_existing_database(self._on_open_existing_pressed)
         self.application_context: password_manager.application_context.ApplicationContext = application_context
@@ -23,7 +23,7 @@ class CreateDatabaseController:
         self.dialog.setFocus()
         self.dialog.browse_button.setFocus()
 
-    def _on_password_create_pressed(self) -> None:
+    def _on_create_pressed(self) -> None:
         """
         Validate passwords and generate key if correct
         """
