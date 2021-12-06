@@ -112,6 +112,15 @@ function postInsertData(result) {
     }
 }
 
+chrome.browserAction.onClicked.addListener(tab => {
+    var newURL = "https://localhost:22222/";
+    chrome.tabs.create({url: newURL});
+    alert("Extension welcome page opened.\n" +
+        "If there is an error about not private connection, trust the certificate to proceed.\n" +
+        "If there is an error that the site cannot be reached, open desktop application and login to a database.\n");
+});
+
+
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     if (changeInfo.status == 'complete') {
         console.log(tabId, changeInfo, tab);

@@ -37,5 +37,14 @@ class Server:
                 return {'error': '"login" parameter not provided'}, 400
             return jsonify(create_password_handler(url, login))
 
+        @app.route("/")
+        def index() -> Any:
+            return """
+            <div>
+            <h3>Extension installed successfully</h3>
+            <p>Right click -> Password manager to access creating and retrieving user data</p>
+            </div>
+            """
+
         context = (self.cert_file, self.key_file)
         app.run(debug=False, ssl_context=context, port=port)
