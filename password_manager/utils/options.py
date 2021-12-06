@@ -8,13 +8,13 @@ def get_last_file() -> str:
     return options.value("last_file", "", str)
 
 
-def set_last_file(file) -> None:
+def set_last_file(file: str) -> None:
     options = QSettings("PasswordManager", "PasswordManager")
     options.setValue("last_file", file)
     del options  # save options to file
 
 
-def set_generation_options(options_: GenerationOptions):
+def set_generation_options(options_: GenerationOptions) -> None:
     options = QSettings("PasswordManager", "PasswordManager")
     options.setValue("uppercase", options_.uppercase)
     options.setValue("special", options_.special)

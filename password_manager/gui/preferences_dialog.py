@@ -110,7 +110,7 @@ class PreferencesDialog(QDialog):
         self.length_input.setValue(options.length)
         self.length_slider.setValue(options.length)
 
-    def _on_input_changes(self):
+    def _on_input_changes(self) -> None:
         options = self.get_options()
         self.save_button.setEnabled(
-            len(options.custom) or options.special or options.numbers or options.lowercase or options.uppercase)
+            len(options.custom) > 0 or options.special or options.numbers or options.lowercase or options.uppercase)

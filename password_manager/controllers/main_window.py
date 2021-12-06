@@ -16,7 +16,7 @@ from password_manager.gui.preferences_dialog import PreferencesDialog
 from password_manager.integration.controller import IntegrationController
 from password_manager.models.record_data import RecordData
 from password_manager.utils.logger import Logger
-from password_manager.utils.options import set_generation_options
+from password_manager.utils.options import set_generation_options, set_last_file
 from password_manager.utils.password_generator import PasswordGenerator
 from password_manager.utils.password_strength_validator import PasswordStrengthValidator
 
@@ -76,6 +76,8 @@ class MainWindowController:
             self.window.record_list.clearSelection()
             Logger.info(f"Loaded records: {self.records}")
             self.run_integration_server()
+            if self.application_context.database_manager:
+                set_last_file(self.application_context.database_manager.path)
             return True
         except (JSONDecodeError, ValueError) as e:
             Logger.error(f"Main window controller: {e}")
