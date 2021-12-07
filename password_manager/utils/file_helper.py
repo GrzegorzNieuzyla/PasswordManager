@@ -1,7 +1,7 @@
 import os
 from typing import Optional
 
-from PyQt6.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog
 
 from password_manager.gui.message_box import show_error
 

@@ -1,7 +1,7 @@
 from typing import Dict, Callable, Optional
 
-from PyQt6.QtCore import Qt, pyqtSignal, pyqtSlot
-from PyQt6.QtWidgets import QListWidget, QListWidgetItem
+from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot
+from PyQt5.QtWidgets import QListWidget, QListWidgetItem
 
 from password_manager.models.record_data import RecordData
 
@@ -30,10 +30,10 @@ class RecordList(QListWidget):
             self.remove_record(record)
         self.records[record.id_] = record
         item = QListWidgetItem(record.title)
-        item.setData(Qt.ItemDataRole.UserRole, record)
+        item.setData(Qt.UserRole, record)
         self.addItem(item)
         self.visible_items[record.id_] = item
-        self.sortItems(Qt.SortOrder.AscendingOrder)
+        self.sortItems(Qt.AscendingOrder)
         self.setCurrentItem(item)
 
     def remove_record(self, record: RecordData) -> None:
@@ -55,11 +55,11 @@ class RecordList(QListWidget):
 
     def _on_click(self, item: QListWidgetItem) -> None:
         if self.clicked_handler:
-            self.clicked_handler(item.data(Qt.ItemDataRole.UserRole))
+            self.clicked_handler(item.data(Qt.UserRole))
 
     def _on_double_click(self, item: QListWidgetItem) -> None:
         if self.double_clicked_handler:
-            self.double_clicked_handler(item.data(Qt.ItemDataRole.UserRole))
+            self.double_clicked_handler(item.data(Qt.UserRole))
 
     def clear_data(self) -> None:
         """
@@ -78,10 +78,10 @@ class RecordList(QListWidget):
         for record in self.records.values():
             if query.lower() in record.title.lower():
                 item = QListWidgetItem(record.title)
-                item.setData(Qt.ItemDataRole.UserRole, record)
+                item.setData(Qt.UserRole, record)
                 self.addItem(item)
                 self.visible_items[record.id_] = item
-        self.sortItems(Qt.SortOrder.AscendingOrder)
+        self.sortItems(Qt.AscendingOrder)
 
     def clear_filter(self) -> None:
         self.filter("")

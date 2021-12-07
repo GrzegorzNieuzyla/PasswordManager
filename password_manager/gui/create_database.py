@@ -1,7 +1,7 @@
 from typing import Callable
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSpacerItem
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSpacerItem
 
 from password_manager.gui.password_strength_label import PasswordStrengthLabel
 from password_manager.utils.file_helper import FileHelper
@@ -69,15 +69,15 @@ class CreateDatabaseDialog(QDialog):
         """
         self.resize(600, 280)
         self.setWindowTitle("Create password database")
-        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
-        self.confirm_input.setEchoMode(QLineEdit.EchoMode.Password)
+        self.password_input.setEchoMode(QLineEdit.Password)
+        self.confirm_input.setEchoMode(QLineEdit.Password)
         self.show_button.clicked.connect(self._on_show_clicked)  # type: ignore
         self.browse_button.clicked.connect(self._on_browse_clicked)  # type: ignore
         self.password_input.textEdited.connect(self._on_password_changed)  # type: ignore
         self.confirm_input.textEdited.connect(self._on_password_changed)  # type: ignore
         self.db_file_input.textEdited.connect(self._on_input_change)  # type: ignore
         self.create_button.setEnabled(False)
-        self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
 
     def _on_browse_clicked(self) -> None:
         """
@@ -91,13 +91,13 @@ class CreateDatabaseDialog(QDialog):
         """
         Toggle password visibility
         """
-        if self.password_input.echoMode() == QLineEdit.EchoMode.Password:
-            self.password_input.setEchoMode(QLineEdit.EchoMode.Normal)
-            self.confirm_input.setEchoMode(QLineEdit.EchoMode.Normal)
+        if self.password_input.echoMode() == QLineEdit.Password:
+            self.password_input.setEchoMode(QLineEdit.Normal)
+            self.confirm_input.setEchoMode(QLineEdit.Normal)
             self.show_button.setText("Hide")
         else:
-            self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
-            self.confirm_input.setEchoMode(QLineEdit.EchoMode.Password)
+            self.password_input.setEchoMode(QLineEdit.Password)
+            self.confirm_input.setEchoMode(QLineEdit.Password)
             self.show_button.setText("Show")
 
     def _on_password_changed(self) -> None:

@@ -1,7 +1,7 @@
 from typing import Callable
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QHBoxLayout, QDialogButtonBox, QCheckBox, QSlider, \
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QHBoxLayout, QDialogButtonBox, QCheckBox, QSlider, \
     QSpinBox
 
 from password_manager.gui.password_strength_label import PasswordStrengthLabel
@@ -11,7 +11,7 @@ from password_manager.utils.password_strength_validator import Strength, Passwor
 
 class GeneratePasswordDialog(QDialog):
     def __init__(self) -> None:
-        super(GeneratePasswordDialog, self).__init__(flags=Qt.WindowType.WindowStaysOnTopHint)
+        super(GeneratePasswordDialog, self).__init__(flags=Qt.WindowStaysOnTopHint)
         self.strength_label: PasswordStrengthLabel = PasswordStrengthLabel()
         self.length_label: QLabel = QLabel("Password length:")
         self.special_checkbox: QCheckBox = QCheckBox("Special characters")
@@ -21,8 +21,8 @@ class GeneratePasswordDialog(QDialog):
         self.custom_checkbox: QCheckBox = QCheckBox("Custom")
         self.custom_input: QLineEdit = QLineEdit()
         self.buttons: QDialogButtonBox = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
-        self.length_slider: QSlider = QSlider(Qt.Orientation.Horizontal)
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.length_slider: QSlider = QSlider(Qt.Horizontal)
         self.length_input: QSpinBox = QSpinBox()
         self._init_layout()
         self._init_properties()
@@ -106,7 +106,7 @@ class GeneratePasswordDialog(QDialog):
 
     def _set_strength_label(self, strength: Strength) -> None:
         self.strength_label.set_strength(strength)
-        self.buttons.button(QDialogButtonBox.StandardButton.Ok).setEnabled(strength != Strength.Empty)
+        self.buttons.button(QDialogButtonBox.Ok).setEnabled(strength != Strength.Empty)
 
     def clear(self) -> None:
         """

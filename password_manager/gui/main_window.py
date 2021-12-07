@@ -1,8 +1,7 @@
 from typing import Callable, Optional
 
-from PyQt6 import QtGui
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSizePolicy, \
+from PyQt5 import QtGui
+from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSizePolicy, \
     QMainWindow, QPlainTextEdit, QGroupBox, QWidget, QStatusBar
 
 from password_manager.gui.menubar import MenuBar
@@ -79,15 +78,15 @@ class MainWindow(QMainWindow):
         login_box.addWidget(self.login_label)
         login_box.addWidget(self.login_input)
         right_vbox.addLayout(login_box)
-        self.record_list.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
-        self.search_input.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-        self.search_label.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
+        self.record_list.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Preferred)
+        self.search_input.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        self.search_label.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
 
         password_box = QHBoxLayout()
         password_box.addWidget(self.password_label)
         password_box.addWidget(self.password_input)
         right_vbox.addLayout(password_box)
-        self.add_new_button.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        self.add_new_button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
 
         buttons_box = QHBoxLayout()
         buttons_box.addWidget(self.strength_label)
@@ -124,10 +123,9 @@ class MainWindow(QMainWindow):
         """
         self.resize(800, 700)
         self.setWindowTitle("Password manager")
-        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
+        self.password_input.setEchoMode(QLineEdit.Password)
         self.record_list.setFocus()
         self.set_strength_label(Strength.Empty)
-        self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
         self.show_button.clicked.connect(self._on_show_clicked)  # type: ignore
         self.title_input.textEdited.connect(self.on_input_changed)  # type: ignore
         self.login_input.textEdited.connect(self.on_input_changed)  # type: ignore
@@ -140,11 +138,11 @@ class MainWindow(QMainWindow):
         """
         Toggle password visibility
         """
-        if self.password_input.echoMode() == QLineEdit.EchoMode.Password:
-            self.password_input.setEchoMode(QLineEdit.EchoMode.Normal)
+        if self.password_input.echoMode() == QLineEdit.Password:
+            self.password_input.setEchoMode(QLineEdit.Normal)
             self.show_button.setText("Hide")
         else:
-            self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
+            self.password_input.setEchoMode(QLineEdit.Password)
             self.show_button.setText("Show")
 
     def set_modification_time(self, days: int) -> None:

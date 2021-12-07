@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QLabel
+from PyQt5.QtWidgets import QLabel
 
 from password_manager.utils.password_strength_validator import Strength
 

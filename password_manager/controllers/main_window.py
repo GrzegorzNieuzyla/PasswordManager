@@ -5,8 +5,8 @@ from os import _exit
 from typing import Dict, Optional, List, Tuple
 from urllib.parse import urlparse
 
-from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QApplication
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QApplication
 
 import password_manager.application_context
 from password_manager.gui.generate_password import GeneratePasswordDialog

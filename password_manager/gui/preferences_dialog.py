@@ -1,7 +1,7 @@
 from typing import Callable
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QDialog, QLabel, QCheckBox, QLineEdit, QSlider, QSpinBox, QVBoxLayout, QHBoxLayout, \
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QDialog, QLabel, QCheckBox, QLineEdit, QSlider, QSpinBox, QVBoxLayout, QHBoxLayout, \
     QPushButton
 
 from password_manager.utils.password_generator import GenerationOptions
@@ -20,7 +20,7 @@ class PreferencesDialog(QDialog):
         self.save_button: QPushButton = QPushButton("Save")
         self.cancel_button: QPushButton = QPushButton("Cancel")
         self.custom_input: QLineEdit = QLineEdit()
-        self.length_slider: QSlider = QSlider(Qt.Orientation.Horizontal)
+        self.length_slider: QSlider = QSlider(Qt.Horizontal)
         self.length_input: QSpinBox = QSpinBox()
         self._init_layout()
         self._init_properties()

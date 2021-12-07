@@ -1,7 +1,7 @@
 from typing import Callable
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSpacerItem, QSizePolicy
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSpacerItem, QSizePolicy
 
 
 class LoginDialog(QDialog):
@@ -26,7 +26,7 @@ class LoginDialog(QDialog):
         top_label_box = QHBoxLayout()
         top_label_box.addItem(QSpacerItem(40, 20))
         top_label_box.addWidget(self.current_db_label)
-        self.current_db_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.current_db_label.setAlignment(Qt.AlignCenter)
         top_label_box.addItem(QSpacerItem(40, 20))
         main_layout.addLayout(top_label_box)
 
@@ -37,16 +37,16 @@ class LoginDialog(QDialog):
         main_layout.addItem(QSpacerItem(40, 50))
 
         main_layout.addWidget(self.wrong_password_label)
-        self.wrong_password_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.wrong_password_label.setAlignment(Qt.AlignCenter)
 
         buttons_box = QHBoxLayout()
         buttons_box.addWidget(self.change_db_button)
         buttons_box.addWidget(self.new_db_button)
         buttons_box.addWidget(self.open_button)
 
-        self.change_db_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        self.new_db_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        self.open_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.change_db_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.new_db_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.open_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         main_layout.addLayout(buttons_box)
 
     def _init_properties(self) -> None:
@@ -55,11 +55,11 @@ class LoginDialog(QDialog):
         """
         self.resize(500, 200)
         self.setWindowTitle("Open database")
-        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
+        self.password_input.setEchoMode(QLineEdit.Password)
         self.password_input.setFocus()
         self.password_input.textEdited.connect(self._enable_open_button)  # type: ignore
         self.open_button.setEnabled(False)
-        self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
 
     def _enable_open_button(self, password: str) -> None:
         """

@@ -1,4 +1,4 @@
-from PyQt6.QtCore import QSettings
+from PyQt5.QtCore import QSettings
 
 from password_manager.utils.password_generator import GenerationOptions
 
