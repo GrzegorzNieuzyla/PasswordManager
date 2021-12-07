@@ -1,7 +1,6 @@
 from typing import Callable, Optional
 
 from PyQt6 import QtGui
-from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QVBoxLayout, QPushButton, QLabel, QLineEdit, QHBoxLayout, QSizePolicy, \
     QMainWindow, QPlainTextEdit, QGroupBox, QWidget, QStatusBar
 
@@ -127,7 +126,6 @@ class MainWindow(QMainWindow):
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.record_list.setFocus()
         self.set_strength_label(Strength.Empty)
-        self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
         self.show_button.clicked.connect(self._on_show_clicked)  # type: ignore
         self.title_input.textEdited.connect(self.on_input_changed)  # type: ignore
         self.login_input.textEdited.connect(self.on_input_changed)  # type: ignore
