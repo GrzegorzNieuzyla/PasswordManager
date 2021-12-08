@@ -1,8 +1,12 @@
+import logging
 from typing import Callable, Union, List, Dict, Any
 
 from flask import Flask, Response
 from flask import jsonify
 from flask import request
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.CRITICAL)
 
 
 class Server:

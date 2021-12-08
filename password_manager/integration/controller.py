@@ -1,5 +1,3 @@
-# TODO: Refresh periodically every n minutes or on click
-# TODO: Refresh GUI on data change
 import os
 from threading import Thread
 from typing import List, Callable, Optional, Tuple, Dict, Union, Any
