@@ -22,10 +22,16 @@ class Server:
 
         @app.route("/v1/api/sites")
         def sites() -> Response:
+            """
+            Endpoint serving list of defined sites
+            """
             return jsonify(get_sites_handler())
 
         @app.route("/v1/api/password")
         def password() -> Any:
+            """
+            Endpoint serving login data for given sites
+            """
             url = request.args.get('url', default=None)
             if not url:
                 return {'error': '"url" parameter not provided'}, 400
@@ -33,6 +39,9 @@ class Server:
 
         @app.route("/v1/api/createpassword")
         def create_password() -> Any:
+            """
+            Endpoint creating new record for given site and login
+            """
             login = request.args.get('login', default=None)
             url = request.args.get('url', default=None)
             if not url:
@@ -43,6 +52,9 @@ class Server:
 
         @app.route("/")
         def index() -> Any:
+            """
+            Health check page
+            """
             return """
             <div>
             <h3>Extension installed successfully</h3>

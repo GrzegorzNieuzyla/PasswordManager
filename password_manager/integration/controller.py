@@ -7,6 +7,10 @@ from password_manager.integration.server import Server
 
 
 class IntegrationController:
+    """
+    Controller managing the flask server needed for browser extension
+    """
+
     def __init__(self, key_file: str, cert_file: str, port: int) -> None:
         if not os.path.exists(key_file) or not os.path.exists(cert_file):
             generate_certificate(cert_file, key_file)
