@@ -20,10 +20,9 @@ pycparser==2.21
 pycryptodome==3.11.0
 pyOpenSSL==21.0.0
 pyparsing==3.0.6
-PyQt6
-pyqt6-plugins==6.1.0.2.2
-PyQt6-Qt6==6.2.1
-PyQt6-sip==13.1.0
+PyQt6==6.2.3
+PyQt6-Qt6==6.2.3
+PyQt6-sip==13.2.1
 pytest==6.2.5
 pytest-mock==3.6.1
 python-dotenv==0.19.1
